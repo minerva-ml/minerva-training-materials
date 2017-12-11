@@ -13,12 +13,13 @@ __pycache__/
 
 # Neptune
 output
-neptune.log
-offline_job.log
 
 # IntelliJ
 out/
 .idea/
 
-#minerva
+# log files
+*.log
+
+# minerva
 #resources/
