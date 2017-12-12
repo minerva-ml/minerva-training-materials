@@ -1,64 +1,56 @@
-# Welcome to Minerva
-CHECK THE VIDEO
+# Minerva
+Minerva is an educational project that lets you learn advanced data science on real-life, curated problems.
 
-[![Minerva welcome video](https://i.ytimg.com/vi/bI-YlVJJl-I/2.jpg)](https://www.youtube.com/watch?v=bI-YlVJJl-I&feature=youtu.be)
+---
 
-Minerva is a platform that lets you learn real life data science at your own pace, piece by piece, feature at a time.
-We re-implement solutions to the most difficult data scientific problems so that you can learn how to do that too.
-Every problem is a collection of small, digestable tasks. Every task is a piece of code, a step in a large machine learning pipeline. You just need to create your implementation!
+## Hands-on approach to learning
+With Minerva you will reproduce, piece by piece, solution to the most difficult data scientific problems, especially challenges. Since each **problem** is quite complex, we have divided it into a collection of small self-contained pieces called **tasks**.
 
-We know what the final score for a well implemented pipeline should be. So as you solve tasks and re-implement parts of the pipeline we will be checking whether your implementation does the job well enough to keep the score high. So beware, we are watching :)
+**Task** is a single step in machine learning pipeline, has its own learning objectives, descriptions and a piece of code that needs to be implemented. This is your job, create technical implementation that fulfill this gap. You use your engineering skills, extensive experimentation and our feedback, in order to make sure that your implementation meets certain quality level. We know what the final score for a well implemented pipeline should be. So as you solve tasks and re-implement parts of the pipeline we will be checking whether your implementation does the job well enough to keep the score high.
 
-# What is it
+## Reproduce Kaggle winning solutions in a transparent way &rarr; learn advanced data science
+Working on **tasks** that, if taken together, creates solution to the **problem** lets you reproduce Kaggle winning solution, piece by piece. This is our hands on approach to learning, because you can work on each part of the winning implementation by yourself.
 
-With Minerva you learn by reproducing real life complicated machine learning pipelines like this:
+## Available problems
 
-![fashion_mnist](.png)
+| Problem        | Description   |
+| -------------- | ------------- |
+| Fashion mnist  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
+| Whales         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
+| | *(more problems will be published in the future, so stay tuned)* |
 
-
-or this:
-
-![whales](.png)
-
-<img src="img/doom.gif" alt="Doom Health Gathering" width="265" height="200"/><img src="img/minitaur.gif" alt="PyBullet Minitaur" width="265" height="200"/> <img src="img/ant.gif" alt="Gym Extensions Ant" width="250" height="200"/>
-
-
-You achieve that by replacing this pipeline with your code. 
-For example in one of the tasks you are asked to build a model:
-
-```python
-    CONFIG={'input_size':28, 'classes':10}
-    
-    def solution(input_size, classes, **kwargs):
-        input_image = Input(shape=(input_size, input_size, 1))
-        """
-        Build your keras model here
-        """
-        class_prediction = Dense(classes, activation='softmax', name='output')(x)
-        model = Model(input_image, class_prediction)
-        return model
-
-``` 
-You write your code and execute a simple bash command to submit your solution:
-```bash
-python run minerva.py submit --task_nr 1 --filepath user_solution/notebooks/task1.ipynb
-```
-or if you want to use neptune you go:
-```bash
-neptune run run minerva.py -- submit --task_nr 1 --filepath user_solution/notebooks/task1.ipynb
-```
-
-The pipeline fits all the steps that were modified by your code, it evaluates the score and voila you get your feedback.
+---
 
 # Installation
-This project assumes `python 3`.
-The rest of the requirements can be installed via:
-```bash
-pip install -r requirements.txt
-```
+This project assumes python 3.5
+1. Clone or download minerva code: `git clone https://github.com/neptune-ml/minerva.git`
 
-In order to use neptune monitoring please login via
-```bash
-neptune login
-```
-Once you are logged in create a project called Minerva. If you want to choose a different name go remember to change the project key in the neptune_config.yaml.
+## CUDA
+Note, that it is highly recommended to train your solution on GPU.
+1. Check your CUDA version. You can get this information by running `nvcc --version` or `cat /usr/local/cuda/version.txt` or by asking your system administrator.
+2. install TensorFlow `pip3 install tensorflow-gpu==1.2.0`
+3. install appropriate PyTorch, by following [PyTorch Get Started](http://pytorch.org/)
+4. install remaining requirements `pip3 install -r requirements.txt`
+
+## no CUDA
+In case you do not have GPU capability, you will work on your processor. Also, you may want to consider using [Neptune](https://neptune.ml 'Machine Learning Lab') to train yur models.
+
+1. install TensorFlow `pip3 install tensorflow==1.2.0`
+2. install PyTorch, by following [PyTorch Get Started](http://pytorch.org/)
+3. install remaining requirements `pip3 install -r requirements.txt`
+
+---
+
+# User support
+You can seek support in two ways:
+1. check [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki')
+2. consider adding issue with label `question`, `bug` or `feature request`. Note, that issues are for technical problems.
+
+# Contributing to Minerva
+You are very welcome to contribute your piece to Minerva. There are three main ways to do so:
+1. Use GitHub issues
+2. Create Pull Request
+3. With custom ideas, contact us directly on [minerva@neptune.ml](minerva@neptune.ml 'coming soon...')
+
+# About the name
+Minerva is a Roman goddess of wisdom, arts and craft. She was usually presented with the strong association with knowledge. Her sacred creature *'owl of Minerva'* symbolizes wisdom and knowledge. We think that this name depicts our project very well, since it is about acquiring knowledge and skills.
