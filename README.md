@@ -47,10 +47,7 @@ You can seek support in two ways:
 2. consider adding issue with label `question`, `bug` or `feature request`. Note, that issues are for technical problems.
 
 ## Contributing to Minerva
-You are very welcome to contribute your piece to Minerva. There are three main ways to do so:
-1. Use GitHub issues
-2. Create Pull Request
-3. With custom ideas, contact us directly on [minerva@neptune.ml](minerva@neptune.ml 'coming soon...')
+Check [CONTRIBUTING](CONTRIBUTING.md) for more information.
 
 ## About the name
 Minerva is a Roman goddess of wisdom, arts and craft. She was usually presented with the strong association with knowledge. Her sacred creature *'owl of Minerva'* symbolizes wisdom and knowledge. We think that this name depicts our project very well, since it is about acquiring knowledge and skills.
