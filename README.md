@@ -25,15 +25,15 @@ Working on **tasks** that, if taken together, creates solution to the **problem*
 This project assumes python 3.5
 1. Clone or download minerva code: `git clone https://github.com/neptune-ml/minerva.git`
 
-## CUDA
+### CUDA
 Note, that it is highly recommended to train your solution on GPU.
 1. Check your CUDA version. You can get this information by running `nvcc --version` or `cat /usr/local/cuda/version.txt` or by asking your system administrator.
 2. install TensorFlow `pip3 install tensorflow-gpu==1.2.0`
 3. install appropriate PyTorch, by following [PyTorch Get Started](http://pytorch.org/)
 4. install remaining requirements `pip3 install -r requirements.txt`
 
-## no CUDA
-In case you do not have GPU capability, you will work on your processor. Also, you may want to consider using [Neptune](https://neptune.ml 'Machine Learning Lab') to train yur models.
+### no CUDA
+In case you do not have GPU capability, you will work on your processor. Also, you may want to consider using [Neptune](https://neptune.ml 'Machine Learning Lab') to train your models.
 
 1. install TensorFlow `pip3 install tensorflow==1.2.0`
 2. install PyTorch, by following [PyTorch Get Started](http://pytorch.org/)
@@ -41,16 +41,16 @@ In case you do not have GPU capability, you will work on your processor. Also, y
 
 ---
 
-# User support
+## User support
 You can seek support in two ways:
 1. check [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki')
 2. consider adding issue with label `question`, `bug` or `feature request`. Note, that issues are for technical problems.
 
-# Contributing to Minerva
+## Contributing to Minerva
 You are very welcome to contribute your piece to Minerva. There are three main ways to do so:
 1. Use GitHub issues
 2. Create Pull Request
 3. With custom ideas, contact us directly on [minerva@neptune.ml](minerva@neptune.ml 'coming soon...')
 
-# About the name
+## About the name
 Minerva is a Roman goddess of wisdom, arts and craft. She was usually presented with the strong association with knowledge. Her sacred creature *'owl of Minerva'* symbolizes wisdom and knowledge. We think that this name depicts our project very well, since it is about acquiring knowledge and skills.
