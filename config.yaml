@@ -10,3 +10,5 @@ exclude:
   - output
   - neptune.log
   - offline_job.log
+  - .idea
+  - .git
