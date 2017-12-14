@@ -3,6 +3,13 @@ Minerva is an educational project that lets you learn advanced data science on r
 
 ---
 
+# Getting started
+1. Follow the [Installation Guide](https://github.com/neptune-ml/minerva/wiki/Installation-Guide 'Minerva Wiki -> installation guide') for setup instructions.
+2. Familiarize yourself with our approach: go straight to the [fashion-mnist problem](./resources/fashion_mnist/problems/hello-fashion_mnist.ipynb 'Fashion MNIST -> Welcome notebook') and start solving.
+3. When ready, go to [Right Whale Recognition problem](./resources/whales/problems/hello-whales.ipynb 'Right Whale Recognition -> Welcome notebook') to start working on more complex problem.
+
+---
+
 ## Hands-on approach to learning
 With Minerva you will reproduce, piece by piece, solution to the most difficult data scientific problems, especially challenges. Since each **problem** is quite complex, we have divided it into a collection of small self-contained pieces called **tasks**.
 
@@ -18,15 +25,6 @@ Working on **tasks** that, if taken together, creates solution to the **problem*
 | Fashion mnist  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
 | Whales         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
 | | *(more problems will be published in the future, so stay tuned)* |
-
----
-
-# Getting started
-1. Follow the [Installation guide](https://github.com/neptune-ml/minerva/wiki/Installation-Guide 'Minerva Wiki -> installation guide') for setup instructions.
-2. Familiarize yourself with our approach: go straight to the [fashion-mnist problem](./resources/fashion_mnist/problems/hello-fashion_mnist.ipynb 'Fashion MNIST -> Welcome notebook') and start solving.
-3. When ready, go to [Right Whale Recognition problem](./resources/whales/problems/hello-whales.ipynb 'Right Whale Recognition -> Welcome notebook') to start working on more complex problem.
-
----
 
 ## User support
 You can seek support in two ways:
