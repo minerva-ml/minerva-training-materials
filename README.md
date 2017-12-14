@@ -21,23 +21,10 @@ Working on **tasks** that, if taken together, creates solution to the **problem*
 
 ---
 
-# Installation
-This project assumes python 3.5
-1. Clone or download minerva code: `git clone https://github.com/neptune-ml/minerva.git`
-
-### CUDA
-Note, that it is highly recommended to train your solution on GPU.
-1. Check your CUDA version. You can get this information by running `nvcc --version` or `cat /usr/local/cuda/version.txt` or by asking your system administrator.
-2. install TensorFlow `pip3 install tensorflow-gpu==1.2.0`
-3. install appropriate PyTorch, by following [PyTorch Get Started](http://pytorch.org/)
-4. install remaining requirements `pip3 install -r requirements.txt`
-
-### no CUDA
-In case you do not have GPU capability, you will work on your processor. Also, you may want to consider using [Neptune](https://neptune.ml 'Machine Learning Lab') to train your models.
-
-1. install TensorFlow `pip3 install tensorflow==1.2.0`
-2. install PyTorch, by following [PyTorch Get Started](http://pytorch.org/)
-3. install remaining requirements `pip3 install -r requirements.txt`
+# Getting started
+1. Follow the [Installation guide](https://github.com/neptune-ml/minerva/wiki/Installation-Guide 'Minerva Wiki -> installation guide') for setup instructions.
+2. Familiarize yourself with our approach: go straight to the [fashion-mnist problem](./resources/fashion_mnist/problems/hello-fashion_mnist.ipynb 'Fashion MNIST -> Welcome notebook') and start solving.
+3. When ready, go to [Right Whale Recognition problem](./resources/whales/problems/hello-whales.ipynb 'Right Whale Recognition -> Welcome notebook') to start working on more complex problem.
 
 ---
 
