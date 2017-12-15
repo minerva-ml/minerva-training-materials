@@ -6,7 +6,7 @@ Minerva is an educational project that lets you learn advanced data science on r
 # Getting started
 1. Follow the [Installation Guide](https://github.com/neptune-ml/minerva/wiki/Installation-Guide 'Minerva Wiki -> installation guide') for setup instructions.
 2. Familiarize yourself with our approach: go straight to the [fashion-mnist problem](./resources/fashion_mnist/problems/hello-fashion_mnist.ipynb 'Fashion MNIST -> Welcome notebook') and start solving.
-3. When ready, go to [Right Whale Recognition problem](./resources/whales/problems/hello-whales.ipynb 'Right Whale Recognition -> Welcome notebook') to start working on more complex problem.
+3. When ready, go to [Right Whale Recognition problem](./resources/whales/problems/hello-whales.ipynb 'Right Whale Recognition -> Welcome notebook') to start working on complex problem.
 
 ---
 
@@ -28,8 +28,8 @@ Working on **tasks** that, if taken together, creates solution to the **problem*
 
 ## User support
 You can seek support in two ways:
-1. check [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki')
-2. consider adding issue with label `question`, `bug` or `feature request`. Note, that issues are for technical problems.
+1. Check [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki'), for typical problems and questions.
+2. Create an issue with label `question`, in case [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki') does not have an asnwer to your question.
 
 ## Contributing to Minerva
 Check [CONTRIBUTING](CONTRIBUTING.md) for more information.
