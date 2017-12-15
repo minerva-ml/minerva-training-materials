@@ -29,7 +29,7 @@ Working on **tasks** that, if taken together, creates solution to the **problem*
 ## User support
 You can seek support in two ways:
 1. Check [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki'), for typical problems and questions.
-2. Create an issue with label `question`, in case [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki') does not have an asnwer to your question.
+2. Create an issue with label `question`, in case [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki') does not have an answer to your question.
 
 ## Contributing to Minerva
 Check [CONTRIBUTING](CONTRIBUTING.md) for more information.
