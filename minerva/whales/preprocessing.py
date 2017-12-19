@@ -11,7 +11,8 @@ from sklearn.externals import joblib
 from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import Dataset, DataLoader
 
-from .utils import CropKeypoints, AlignKeypoints, ALIGNER_AUXILARY_COLUMNS
+from .config import ALIGNER_AUXILARY_COLUMNS
+from .utils import CropKeypoints, AlignKeypoints
 from ..backend.base import BaseTransformer
 
 
@@ -21,7 +22,8 @@ class TargetEncoderPandas(BaseTransformer):
         self.encode_cols = encode
         self.no_encode_cols = no_encode
         self.encoders_list = self._initialize_encoders()
-        self.cols_with_encoders = [[col_name, encoder] for col_name, encoder in zip(self.encode_cols, self.encoders_list)]
+        self.cols_with_encoders = [[col_name, encoder] for col_name, encoder in
+                                   zip(self.encode_cols, self.encoders_list)]
 
     def _initialize_encoders(self):
         label_encoders = []
@@ -186,6 +188,22 @@ class DataLoaderBasic(BaseTransformer):
         self.train_dataset_params = self.dataset_params['train']
         self.train_loader_params = self.loader_params['train']
 
+    def load(self, filepath):
+        params = joblib.load(filepath)
+        self.dataset_params = params['dataset_params']
+        self.loader_params = params['loader_params']
+        return self
+
+    def save(self, filepath):
+        params = {'dataset_params': self.dataset_params, 'loader_params': self.loader_params}
+        joblib.dump(params, filepath)
+
+
+class DataLoaderLocalizer(DataLoaderBasic):
+    def __init__(self, dataset_params, loader_params):
+        super().__init__(dataset_params, loader_params)
+        self.datagen_builder = get_datagen_localizer
+
     def transform(self, X, y, validation_data, train_mode):
         if train_mode:
             flow, steps = self.datagen_builder(X, y,
@@ -207,22 +225,6 @@ class DataLoaderBasic(BaseTransformer):
 
         return {'datagen': (flow, steps),
                 'validation_datagen': (valid_flow, valid_steps)}
-
-    def load(self, filepath):
-        params = joblib.load(filepath)
-        self.dataset_params = params['dataset_params']
-        self.loader_params = params['loader_params']
-        return self
-
-    def save(self, filepath):
-        params = {'dataset_params': self.dataset_params, 'loader_params': self.loader_params}
-        joblib.dump(params, filepath)
-
-
-class DataLoaderLocalizer(DataLoaderBasic):
-    def __init__(self, dataset_params, loader_params):
-        super().__init__(dataset_params, loader_params)
-        self.datagen_builder = get_datagen_localizer
 
 
 def get_datagen_localizer(X, y, dataset_params, loader_params):

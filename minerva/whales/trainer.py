@@ -8,7 +8,9 @@ from tqdm import tqdm
 
 from minerva.utils import get_logger
 from .config import SOLUTION_CONFIG as config
-from .utils import SHAPE_COLUMNS, LOCALIZER_COLUMNS, ALIGNER_COLUMNS, CLASSIFIER_COLUMNS, SUB_PROBLEMS_SPECS
+from .config import SHAPE_COLUMNS, LOCALIZER_COLUMNS, ALIGNER_COLUMNS, CLASSIFIER_COLUMNS, TARGET_COLUMNS
+from .pipelines import OUTPUT_NAMES
+from .validation import SCORE_FUNCTIONS
 from ..backend.cross_validation import train_test_split_atleast_one
 from ..backend.trainer import BasicTrainer
 
@@ -48,7 +50,7 @@ class Trainer(BasicTrainer):
                                      })
 
     def _evaluate(self, X, y):
-        predictions = self.pipeline.transform({'unbinner_input': {'original_shapes': X[SHAPE_COLUMNS],
+        outputs = self.pipeline.transform({'unbinner_input': {'original_shapes': X[SHAPE_COLUMNS],
                                                                   },
                                                'localizer_input': {'X': X,
                                                                    'y': y[LOCALIZER_COLUMNS],
@@ -66,11 +68,10 @@ class Trainer(BasicTrainer):
                                                                     'train_mode': False,
                                                                     }
                                                })
-        logger.info(predictions.keys())
+        y_pred = outputs['y_pred']
+        y_true = outputs['y_true']
 
-        y_pred = predictions[SUB_PROBLEMS_SPECS[self.sub_problem]['output_name']]
-        y_true = y[SUB_PROBLEMS_SPECS[self.sub_problem]['target_columns']].values
-        score = SUB_PROBLEMS_SPECS[self.sub_problem]['score_function'](y_pred, y_true)
+        score = SCORE_FUNCTIONS[self.sub_problem](y_true, y_pred)
         return score
 
     def _load_train_valid(self):
