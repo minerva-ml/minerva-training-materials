@@ -3,10 +3,11 @@ project-key: MIN
 name: minerva
 
 parameters:
-  data_dir: /mnt/ml-team/minerva/whales/data
-  solution_dir: /mnt/ml-team/minerva/cache/whales/solution/alignment
+  data_dir: path/to/your/data # insert your path
+  solution_dir: resources/whales/solution/localization # you can move the solution  folder wherever you want or create a new one (you will have to dry_run then)
 
 exclude:
+  - resources
   - output
   - neptune.log
   - offline_job.log
