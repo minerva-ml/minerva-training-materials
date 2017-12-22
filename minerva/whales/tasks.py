@@ -98,3 +98,58 @@ class Task6(Task):
         self.trainer.pipeline.get_step('classifier_calibrator').transformer = user_solution(user_config)
         self.trainer.pipeline.get_step('classifier_calibrator').is_substituted = True
         return self
+
+@register_task
+class Task6(Task):
+    """
+    Note:
+        Probability Calibration
+    """
+
+    def modify_config(self, user_config):
+        self.trainer.config['classifier_calibrator'] = user_config
+        return self
+
+    def modify_pipeline(self, user_solution, user_config):
+        self.trainer.pipeline.get_step('classifier_calibrator').transformer = user_solution(user_config)
+        self.trainer.pipeline.get_step('classifier_calibrator').is_substituted = True
+        return self
+
+@register_task
+class Task7(Task):
+    """
+    Note:
+        Dataset localizer
+    """
+
+    def modify_pipeline(self, user_solution, user_config):
+        original_config = self.trainer.config
+        self.trainer.pipeline.get_step('localizer_loader').transformer.dataset = user_solution(original_config)
+        self.trainer.pipeline.get_step('localizer_loader').is_substituted = True
+        return self
+
+@register_task
+class Task8(Task):
+    """
+    Note:
+        Dataset aligner
+    """
+
+    def modify_pipeline(self, user_solution, user_config):
+        original_config = self.trainer.config
+        self.trainer.pipeline.get_step('aligner_loader').transformer = user_solution(original_config)
+        self.trainer.pipeline.get_step('aligner_loader').is_substituted = True
+        return self
+
+@register_task
+class Task9(Task):
+    """
+    Note:
+        Dataset classifier
+    """
+
+    def modify_pipeline(self, user_solution, user_config):
+        original_config = self.trainer.config
+        self.trainer.pipeline.get_step('classifier_loader').transformer = user_solution(original_config)
+        self.trainer.pipeline.get_step('classifier_loader').is_substituted = True
+        return self
