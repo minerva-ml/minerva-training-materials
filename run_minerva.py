@@ -15,7 +15,7 @@ def action():
 @action.command()
 @click.option('-p', '--problem', help='problem to choose', required=True)
 @click.option('-s', '--sub_problem', help='sub problem to choose', required=False)
-@click.option('-e', '--eval_mode', help='evaluate only mode', is_flag=True, required=False)
+@click.option('-e', '--eval_mode', help='evaluate only mode', default=False, required=False)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 def dry_run(problem, sub_problem, eval_mode, dev_mode):
     if problem == 'whales':
