@@ -3,6 +3,7 @@ project-key: MIN
 name: minerva
 
 parameters:
+<<<<<<< HEAD
 
   # Dev setup
   #data_dir: /mnt/ml-team/minerva/user_data_dir/whales
@@ -17,6 +18,13 @@ parameters:
   #solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
 
 exclude:
+=======
+  data_dir: /mnt/ml-team/minerva/whales/data
+  solution_dir: resources/whales/solution/classification
+
+exclude:
+  - .git
+>>>>>>> master
   - resources
   - output
   - neptune.log

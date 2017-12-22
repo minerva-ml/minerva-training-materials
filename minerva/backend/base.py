@@ -213,6 +213,17 @@ class BaseTransformer:
         pass
 
 
+class Output(BaseTransformer):
+    def transform(self, **kwargs):
+        return kwargs
+
+    def load(self, filepath):
+        return self
+
+    def save(self, filepath):
+        joblib.dump({}, filepath)
+
+
 class MockTransformer(BaseTransformer):
     def fit(self, *args, **kwargs):
         return self
