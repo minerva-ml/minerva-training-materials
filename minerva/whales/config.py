@@ -219,5 +219,5 @@ SOLUTION_CONFIG = {
                                                     },
                            },
                            },
-    'probability_calibration': {'power': 1.35},
+    'classifier_calibrator': {'power': 1.35},
 }

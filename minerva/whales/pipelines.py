@@ -95,7 +95,7 @@ def classification_pipeline(config):
                                 input_steps=[dataloader],
                                 cache_dirpath=config['global']['cache_dirpath'])
     proba_calibrator = SubstitutableStep(name='classifier_calibrator',
-                                         transformer=ProbabilityCalibration(**config['probability_calibration']),
+                                         transformer=ProbabilityCalibration(**config['classifier_calibrator']),
                                          input_steps=[network],
                                          cache_dirpath=config['global']['cache_dirpath'])
     return proba_calibrator
