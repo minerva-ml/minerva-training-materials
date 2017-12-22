@@ -15,6 +15,23 @@ os.makedirs(exp_root, exist_ok=True)
 # exp_root = '/mnt/ml-team/minerva/cache/whales/experiments/{}'.format(exp_start + '_' + exp_name)
 # os.makedirs(exp_root, exist_ok=True)
 
+SHAPE_COLUMNS = ['height', 'width']
+LOCALIZER_TARGET_COLUMNS = ['bbox1_x', 'bbox1_y', 'bbox2_x', 'bbox2_y']
+LOCALIZER_AUXILARY_COLUMNS = []
+ALIGNER_TARGET_COLUMNS = ['bonnet_x', 'bonnet_y', 'blowhead_x', 'blowhead_y']
+ALIGNER_AUXILARY_COLUMNS = ['callosity', 'whaleID']
+CLASSIFIER_TARGET_COLUMNS = ['whaleID']
+CLASSIFIER_AUXILARY_COLUMNS = ['callosity']
+
+LOCALIZER_COLUMNS = LOCALIZER_TARGET_COLUMNS + LOCALIZER_AUXILARY_COLUMNS
+ALIGNER_COLUMNS = ALIGNER_TARGET_COLUMNS + ALIGNER_AUXILARY_COLUMNS
+CLASSIFIER_COLUMNS = CLASSIFIER_TARGET_COLUMNS + CLASSIFIER_AUXILARY_COLUMNS
+
+TARGET_COLUMNS = {'localization': LOCALIZER_TARGET_COLUMNS,
+                  'alignment': ALIGNER_TARGET_COLUMNS,
+                  'classification': CLASSIFIER_TARGET_COLUMNS,
+                  'end_to_end': CLASSIFIER_TARGET_COLUMNS
+                  }
 
 GLOBAL_CONFIG = {'log_file': exp_root + '/minerva.log',
                  'exp_name': exp_name,
@@ -32,7 +49,7 @@ GLOBAL_CONFIG = {'log_file': exp_root + '/minerva.log',
 
 SOLUTION_CONFIG = {
     'global': {'cache_dirpath': GLOBAL_CONFIG['exp_root']},
-    'trainer': {'metadata': os.path.join(data_dir, 'metadata_full_cleaned.csv'),
+    'trainer': {'metadata': os.path.join(data_dir, 'metadata.csv'),
                 'train_csv': os.path.join(data_dir, 'annotations/train.csv'),
                 'bbox_train_json': os.path.join(data_dir, 'annotations/slot.json'),
                 'bonnet_tip_json': os.path.join(data_dir, 'annotations/bonnet_tip.json'),

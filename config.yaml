@@ -3,8 +3,11 @@ project-key: MIN
 name: minerva
 
 parameters:
-  data_dir: path/to/your/data # insert your path
-  solution_dir: resources/whales/solution/localization # you can move the solution  folder wherever you want or create a new one (you will have to dry_run then)
+  data_dir: /mnt/ml-team/minerva/resources/whales/data
+  solution_dir: resources/whales/solution/classification
+
+  # data_dir: path/to/your/data # for instance resources/whales/data
+  # solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
 
 exclude:
   - resources

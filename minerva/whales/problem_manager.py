@@ -2,19 +2,18 @@ import numpy as np
 
 from .tasks import *
 from .config import SOLUTION_CONFIG
-from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline, end_to_end_pipeline
+from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
 from .registry import registered_tasks, registered_scores
 from .trainer import Trainer
 from ..backend.task_manager import TaskSolutionParser
 
 pipeline_dict = {'localization': localization_pipeline,
                  'alignment': alignment_pipeline,
-                 'classification': classification_pipeline,
-                 'end_to_end': end_to_end_pipeline}
+                 'classification': classification_pipeline}
 
 
 def dry_run(sub_problem, eval_mode, dev_mode):
-    pipeline = pipeline_dict.get(sub_problem, end_to_end_pipeline)
+    pipeline = pipeline_dict[sub_problem]
     trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, sub_problem)
     if eval_mode:
         _evaluate(trainer, sub_problem)
@@ -24,7 +23,7 @@ def dry_run(sub_problem, eval_mode, dev_mode):
 
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode):
-    pipeline = pipeline_dict.get(sub_problem, end_to_end_pipeline)
+    pipeline = pipeline_dict[sub_problem]
     trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, sub_problem)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)
