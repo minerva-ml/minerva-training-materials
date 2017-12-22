@@ -4,9 +4,11 @@ name: minerva
 
 parameters:
   data_dir: /mnt/ml-team/minerva/whales/data
-  solution_dir: /mnt/ml-team/minerva/cache/whales/solution/alignment
+  solution_dir: resources/whales/solution/classification
 
 exclude:
+  - .git
+  - resources
   - output
   - neptune.log
   - offline_job.log

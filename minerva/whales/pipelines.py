@@ -2,8 +2,9 @@ from .models import SimpleLocalizer, SimpleAligner, SimpleClassifier
 
 from .postprocessing import DetectionAverage, AlignerAverage, ProbabilityCalibration, UnBinner, Adjuster
 from .preprocessing import TargetEncoderPandas, DataLoaderLocalizer, DataLoaderAligner, DataLoaderClassifier
-from .utils import get_crop_coordinates, add_crop_to_validation, get_align_coordinates, add_alignment_to_validation
-from ..backend.base import SubstitutableStep, stack_inputs, identity_inputs
+from .utils import get_crop_coordinates, add_crop_to_validation, get_align_coordinates, add_alignment_to_validation, \
+    get_localizer_target_column, get_aligner_target_column, get_classifier_target_column
+from ..backend.base import SubstitutableStep, Output, stack_inputs, identity_inputs
 from ..backend.postprocessing import PredictionAverage
 
 
@@ -21,7 +22,16 @@ def localization_pipeline(config):
                                  input_steps=[network],
                                  input_data=['unbinner_input'],
                                  cache_dirpath=config['global']['cache_dirpath'])
-    return unbinner
+
+    output = SubstitutableStep(name='localizer_output',
+                               transformer=Output(),
+                               input_data=['localizer_input'],
+                               input_steps=[unbinner],
+                               adapter={
+                                   'y_pred': ([('localizer_unbinner', 'prediction_coordinates')], identity_inputs),
+                                   'y_true': ([('localizer_input', 'y')], get_localizer_target_column), },
+                               cache_dirpath=config['global']['cache_dirpath'])
+    return output
 
 
 def alignment_pipeline(config):
@@ -65,7 +75,16 @@ def alignment_pipeline(config):
                                               [('aligner_unbinner', 'prediction_coordinates')], identity_inputs)
                                           },
                                  cache_dirpath=config['global']['cache_dirpath'])
-    return adjuster
+
+    output = SubstitutableStep(name='aligner_output',
+                               transformer=Output(),
+                               input_data=['aligner_input'],
+                               input_steps=[adjuster],
+                               adapter={
+                                   'y_pred': ([('aligner_adjuster', 'prediction_coordinates')], identity_inputs),
+                                   'y_true': ([('aligner_input', 'y')], get_aligner_target_column), },
+                               cache_dirpath=config['global']['cache_dirpath'])
+    return output
 
 
 def classification_pipeline(config):
@@ -98,7 +117,15 @@ def classification_pipeline(config):
                                          transformer=ProbabilityCalibration(**config['probability_calibration']),
                                          input_steps=[network],
                                          cache_dirpath=config['global']['cache_dirpath'])
-    return proba_calibrator
+
+    output = SubstitutableStep(name='classifier_output',
+                               transformer=Output(),
+                               input_steps=[proba_calibrator, encoder],
+                               adapter={
+                                   'y_pred': ([('classifier_calibrator', 'prediction_probability')], identity_inputs),
+                                   'y_true': ([('classifier_encoder', 'y')], get_classifier_target_column), },
+                               cache_dirpath=config['global']['cache_dirpath'])
+    return output
 
 
 def end_to_end_pipeline(config):

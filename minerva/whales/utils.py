@@ -1,24 +1,32 @@
-from functools import partial
-
 import cv2
 from imgaug import augmenters as iaa
 import numpy as np
-from sklearn.metrics import mean_squared_error, log_loss
-from math import sqrt
 
-from .config import GLOBAL_CONFIG
+from .config import LOCALIZER_TARGET_COLUMNS, ALIGNER_TARGET_COLUMNS, CLASSIFIER_TARGET_COLUMNS
 
-SHAPE_COLUMNS = ['height', 'width']
-LOCALIZER_TARGET_COLUMNS = ['bbox1_x', 'bbox1_y', 'bbox2_x', 'bbox2_y']
-LOCALIZER_AUXILARY_COLUMNS = []
-ALIGNER_TARGET_COLUMNS = ['bonnet_x', 'bonnet_y', 'blowhead_x', 'blowhead_y']
-ALIGNER_AUXILARY_COLUMNS = ['callosity', 'whaleID']
-CLASSIFIER_TARGET_COLUMNS = ['whaleID']
-CLASSIFIER_AUXILARY_COLUMNS = ['callosity']
 
-LOCALIZER_COLUMNS = LOCALIZER_TARGET_COLUMNS + LOCALIZER_AUXILARY_COLUMNS
-ALIGNER_COLUMNS = ALIGNER_TARGET_COLUMNS + ALIGNER_AUXILARY_COLUMNS
-CLASSIFIER_COLUMNS = CLASSIFIER_TARGET_COLUMNS + CLASSIFIER_AUXILARY_COLUMNS
+def get_localizer_target_column(y):
+    """
+    Note:
+        input is a list by definition
+    """
+    return y[0][LOCALIZER_TARGET_COLUMNS].values
+
+
+def get_aligner_target_column(y):
+    """
+    Note:
+        input is a list by definition
+    """
+    return y[0][ALIGNER_TARGET_COLUMNS].values
+
+
+def get_classifier_target_column(y):
+    """
+    Note:
+        input is a list by definition
+    """
+    return y[0][CLASSIFIER_TARGET_COLUMNS].values
 
 
 def add_crop_to_validation(input_):
@@ -143,32 +151,3 @@ def align(img, aligning_coordinates_p1, aligning_coordinates_p2, target_size=(20
     output = cv2.warpAffine(img, M, (t_width, t_height), flags=cv2.INTER_CUBIC)
 
     return output
-
-
-def rmse_multi(y_pred, y_true):
-    rmse = []
-    for i in range(y_pred.shape[1]):
-        pred = y_pred[:, i]
-        true = y_true[:, i]
-        rmse_chunk = sqrt(mean_squared_error(pred, true))
-        rmse.append(rmse_chunk)
-    return np.mean(rmse)
-
-
-SUB_PROBLEMS_SPECS = {'localization': {'output_name': 'prediction_coordinates',
-                                       'target_columns': LOCALIZER_TARGET_COLUMNS,
-                                       'score_function': rmse_multi
-                                       },
-                      'alignment': {'output_name': 'prediction_coordinates',
-                                    'target_columns': ALIGNER_TARGET_COLUMNS,
-                                    'score_function': rmse_multi
-                                    },
-                      'classification': {'output_name': 'prediction_probability',
-                                         'target_columns': CLASSIFIER_TARGET_COLUMNS,
-                                         'score_function': partial(log_loss, labels=GLOBAL_CONFIG['num_classes'])
-                                         },
-                      'end_to_end': {'output_name': 'prediction_probability',
-                                     'target_columns': CLASSIFIER_TARGET_COLUMNS,
-                                     'score_function': partial(log_loss, labels=GLOBAL_CONFIG['num_classes'])
-                                     },
-                      }
