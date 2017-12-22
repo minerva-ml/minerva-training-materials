@@ -1,5 +1,6 @@
 import numpy as np
 
+from minerva.utils import copy_resources
 from .tasks import *
 from .config import SOLUTION_CONFIG
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
@@ -12,9 +13,12 @@ pipeline_dict = {'localization': localization_pipeline,
                  'classification': classification_pipeline}
 
 
-def dry_run(sub_problem, eval_mode, dev_mode):
+def dry_run(sub_problem, eval_mode, dev_mode, cloud_mode):
+    if cloud_mode:
+        copy_resources()
+
     pipeline = pipeline_dict[sub_problem]
-    trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, sub_problem)
+    trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, cloud_mode, sub_problem)
     if eval_mode:
         _evaluate(trainer, sub_problem)
     else:
@@ -22,9 +26,12 @@ def dry_run(sub_problem, eval_mode, dev_mode):
         _evaluate(trainer, sub_problem)
 
 
-def submit_task(sub_problem, task_nr, filepath, dev_mode):
+def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
+    if cloud_mode:
+        copy_resources()
+
     pipeline = pipeline_dict[sub_problem]
-    trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, sub_problem)
+    trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, cloud_mode, sub_problem)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)
     new_trainer = task_handler.substitute(user_task_solution, user_config)
