@@ -18,8 +18,9 @@ logger = get_logger()
 
 
 class Trainer(BasicTrainer):
-    def __init__(self, pipeline, config, dev_mode=False, sub_problem=None):
+    def __init__(self, pipeline, config, dev_mode=False, cloud_mode=False, sub_problem=None):
         super().__init__(pipeline, config, dev_mode)
+        self.cloud_mode = cloud_mode
         self.sub_problem = sub_problem
         self.cv_splitting = partial(train_test_split_atleast_one, test_size=0.12, random_state=RANDOM_STATE)
 
@@ -50,23 +51,23 @@ class Trainer(BasicTrainer):
 
     def _evaluate(self, X, y):
         outputs = self.pipeline.transform({'unbinner_input': {'original_shapes': X[SHAPE_COLUMNS],
-                                                                  },
-                                               'localizer_input': {'X': X,
-                                                                   'y': y[LOCALIZER_COLUMNS],
-                                                                   'validation_data': None,
-                                                                   'train_mode': False,
-                                                                   },
-                                               'aligner_input': {'X': X,
-                                                                 'y': y[ALIGNER_COLUMNS],
-                                                                 'validation_data': None,
-                                                                 'train_mode': False,
-                                                                 },
-                                               'classifier_input': {'X': X,
-                                                                    'y': y[CLASSIFIER_COLUMNS],
-                                                                    'validation_data': None,
-                                                                    'train_mode': False,
-                                                                    }
-                                               })
+                                                              },
+                                           'localizer_input': {'X': X,
+                                                               'y': y[LOCALIZER_COLUMNS],
+                                                               'validation_data': None,
+                                                               'train_mode': False,
+                                                               },
+                                           'aligner_input': {'X': X,
+                                                             'y': y[ALIGNER_COLUMNS],
+                                                             'validation_data': None,
+                                                             'train_mode': False,
+                                                             },
+                                           'classifier_input': {'X': X,
+                                                                'y': y[CLASSIFIER_COLUMNS],
+                                                                'validation_data': None,
+                                                                'train_mode': False,
+                                                                }
+                                           })
         y_pred = outputs['y_pred']
         y_true = outputs['y_true']
 
@@ -74,12 +75,12 @@ class Trainer(BasicTrainer):
         return score
 
     def _load_train_valid(self):
-        (X_train, y_train), _ = load_whale_data()
+        (X_train, y_train), _ = load_whale_data(self.cloud_mode)
         X_train_, X_valid_, y_train_, y_valid_ = self.cv_splitting(X_train, y_train)
         return (X_train_, y_train_), (X_valid_, y_valid_)
 
     def _load_test(self):
-        _, (X_test, y_test) = load_whale_data()
+        _, (X_test, y_test) = load_whale_data(self.cloud_mode)
         return X_test, y_test
 
     def _load_grid_search_params(self):
@@ -88,8 +89,10 @@ class Trainer(BasicTrainer):
         return n_iter, grid_params
 
 
-def load_whale_data():
-    meta_data_ = pd.read_csv(config['trainer']['metadata'])
+def load_whale_data(cloud_mode):
+    meta_filepath = config['trainer']['metadata']
+
+    meta_data_ = pd.read_csv(meta_filepath)
     meta_data = meta_data_.reset_index(drop=True)
 
     X = meta_data

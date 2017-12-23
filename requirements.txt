@@ -28,7 +28,6 @@ jupyter==1.0.0
 jupyter-client==5.1.0
 jupyter-console==5.2.0
 jupyter-core==4.4.0
-Keras==2.1.2
 kitchen==1.2.4
 Markdown==2.2.0
 MarkupSafe==1.0
@@ -81,7 +80,6 @@ smmap==0.9.0
 terminado==0.8.1
 terminaltables==2.1.0
 testpath==0.3.1
-torchvision==0.1.9
 tornado==4.2
 tqdm==4.11.2
 traitlets==4.3.2

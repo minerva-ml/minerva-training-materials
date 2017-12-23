@@ -1,3 +1,4 @@
+import subprocess
 import logging
 
 from minerva.whales.config import GLOBAL_CONFIG
@@ -18,7 +19,6 @@ def _welcome_message(fn):
 
 @_welcome_message
 def init_logger():
-
     logger = logging.getLogger('minerva-whales')
     logger.setLevel(logging.INFO)
     message_format = logging.Formatter(fmt='%(asctime)s %(name)s >>> %(message)s',
@@ -30,7 +30,6 @@ def init_logger():
     fh_tr.setLevel(logging.INFO)
     fh_tr.setFormatter(fmt=message_format)
     logger.addHandler(fh_tr)
-
 
     # console handler for validation info
     ch_va = logging.StreamHandler()
@@ -44,3 +43,8 @@ def init_logger():
 
 def get_logger():
     return logging.getLogger('minerva-whales')
+
+
+def copy_resources():
+    cmd = 'cp -rf /public/minerva/resources /output'
+    subprocess.call(cmd, shell=True)

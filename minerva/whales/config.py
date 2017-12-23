@@ -49,7 +49,7 @@ GLOBAL_CONFIG = {'log_file': exp_root + '/minerva.log',
 
 SOLUTION_CONFIG = {
     'global': {'cache_dirpath': GLOBAL_CONFIG['exp_root']},
-    'trainer': {'metadata': os.path.join(data_dir, 'metadata_full_cleaned.csv'),
+    'trainer': {'metadata': os.path.join(data_dir, 'metadata.csv'),
                 'train_csv': os.path.join(data_dir, 'annotations/train.csv'),
                 'bbox_train_json': os.path.join(data_dir, 'annotations/slot.json'),
                 'bonnet_tip_json': os.path.join(data_dir, 'annotations/bonnet_tip.json'),
