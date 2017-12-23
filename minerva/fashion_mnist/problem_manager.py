@@ -1,3 +1,4 @@
+from minerva.utils import copy_resources
 from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
 from .registry import registered_tasks, registered_score
@@ -5,7 +6,10 @@ from .trainer import Trainer
 from ..backend.task_manager import TaskSolutionParser
 
 
-def dry_run(sub_problem, eval_mode, dev_mode):
+def dry_run(sub_problem, eval_mode, dev_mode, cloud_mode):
+    if cloud_mode:
+        copy_resources()
+
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     if eval_mode:
         _evaluate(trainer)
@@ -14,7 +18,10 @@ def dry_run(sub_problem, eval_mode, dev_mode):
         _evaluate(trainer)
 
 
-def submit_task(sub_problem, task_nr, filepath, dev_mode):
+def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
+    if cloud_mode:
+        copy_resources()
+
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)

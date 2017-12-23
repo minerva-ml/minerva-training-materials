@@ -213,6 +213,17 @@ class BaseTransformer:
         pass
 
 
+class Output(BaseTransformer):
+    def transform(self, **kwargs):
+        return kwargs
+
+    def load(self, filepath):
+        return self
+
+    def save(self, filepath):
+        joblib.dump({}, filepath)
+
+
 class MockTransformer(BaseTransformer):
     def fit(self, *args, **kwargs):
         return self
@@ -229,6 +240,17 @@ class MockTransformer(BaseTransformer):
 
     def save(self, filepath):
         pass
+
+
+class Dummy(BaseTransformer):
+    def transform(self, **kwargs):
+        return kwargs
+
+    def load(self, filepath):
+        return self
+
+    def save(self, filepath):
+        joblib.dump({}, filepath)
 
 
 def identity_inputs(inputs):
@@ -248,3 +270,7 @@ def sum_inputs(inputs):
 def average_inputs(inputs):
     stacked = np.stack(inputs, axis=0)
     return np.mean(stacked, axis=0)
+
+
+def exp_transform(inputs):
+    return np.exp(inputs[0])

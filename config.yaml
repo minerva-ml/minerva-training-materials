@@ -3,12 +3,26 @@ project-key: MIN
 name: minerva
 
 parameters:
-  data_dir: /mnt/ml-team/minerva/whales/data
-  solution_dir: /mnt/ml-team/minerva/cache/whales/solution/alignment
+
+  # Dev setup
+  #data_dir: /mnt/ml-team/minerva/user_data_dir/whales
+  #solution_dir: resources/whales/solution/classification
+
+  # Cloud setup
+  data_dir: /public/whales
+  solution_dir: /output/resources/whales/solution/classification
+
+  # Local setup
+  #data_dir: path/to/your/data # for instance resources/whales/data
+  #solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
 
 exclude:
+  - resources
   - output
   - neptune.log
   - offline_job.log
   - .idea
   - .git
+
+# Comment if local
+pip-requirements-file: requirements.txt

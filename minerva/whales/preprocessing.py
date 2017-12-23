@@ -11,7 +11,8 @@ from sklearn.externals import joblib
 from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import Dataset, DataLoader
 
-from .utils import CropKeypoints, AlignKeypoints, ALIGNER_AUXILARY_COLUMNS
+from .config import ALIGNER_AUXILARY_COLUMNS
+from .utils import CropKeypoints, AlignKeypoints
 from ..backend.base import BaseTransformer
 
 
@@ -21,7 +22,8 @@ class TargetEncoderPandas(BaseTransformer):
         self.encode_cols = encode
         self.no_encode_cols = no_encode
         self.encoders_list = self._initialize_encoders()
-        self.cols_with_encoders = [[col_name, encoder] for col_name, encoder in zip(self.encode_cols, self.encoders_list)]
+        self.cols_with_encoders = [[col_name, encoder] for col_name, encoder in
+                                   zip(self.encode_cols, self.encoders_list)]
 
     def _initialize_encoders(self):
         label_encoders = []
