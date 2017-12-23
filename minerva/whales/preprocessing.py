@@ -180,8 +180,6 @@ class DataLoaderBasic(BaseTransformer):
         self.loader_params = loader_params
         self._unpack_params()
 
-        self.datagen_builder = None
-
     def _unpack_params(self):
         self.inference_dataset_params = self.dataset_params['inference']
         self.inference_loader_params = self.loader_params['inference']
@@ -240,6 +238,7 @@ class DataLoaderAligner(DataLoaderBasic):
         self.dataset = DatasetAligner
 
     def transform(self, X, y, crop_coordinates, validation_data, train_mode):
+
         if train_mode:
             flow, steps = self.datagen_builder(X, y, crop_coordinates,
                                                self.train_dataset_params,

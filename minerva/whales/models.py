@@ -310,7 +310,7 @@ class PyTorchClassifier(nn.Module):
     def forward(self, x):
         features = self.features(x)
         flat_features = features.view(-1, self.flat_features)
-        out = torch.exp(self.classifier(flat_features))
+        out = self.classifier(flat_features)
         return out
 
 
@@ -396,7 +396,7 @@ class PyTorchClassifierMultiOutput(nn.Module):
     def forward_target(self, x):
         features = self.features(x)
         flat_features = features.view(-1, self.flat_features)
-        pred_whale_id = torch.exp(self.whale_id(flat_features))
+        pred_whale_id = self.whale_id(flat_features)
         return [pred_whale_id]
 
 
