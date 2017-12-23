@@ -6,16 +6,14 @@ from .trainer import Trainer
 from ..backend.task_manager import TaskSolutionParser
 
 
-def dry_run(sub_problem, eval_mode, dev_mode, cloud_mode):
+def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     if cloud_mode:
         copy_resources()
 
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
-    if eval_mode:
-        _evaluate(trainer)
-    else:
+    if train_mode:
         trainer.train()
-        _evaluate(trainer)
+    _evaluate(trainer)
 
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):

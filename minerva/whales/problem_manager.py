@@ -13,14 +13,14 @@ pipeline_dict = {'localization': localization_pipeline,
                  'classification': classification_pipeline}
 
 
-def dry_run(sub_problem, eval_mode, dev_mode, cloud_mode):
+def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     if cloud_mode:
         copy_resources()
 
     pipeline = pipeline_dict[sub_problem]
     trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, cloud_mode, sub_problem)
 
-    if eval_mode == 'false':
+    if train_mode:
         trainer.train()
     _evaluate(trainer, sub_problem)
 
