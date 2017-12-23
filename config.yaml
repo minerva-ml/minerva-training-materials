@@ -6,7 +6,7 @@ parameters:
 
   # Dev setup
   data_dir: /mnt/ml-team/minerva/user_data_dir/whales
-  solution_dir: resources/whales/solution/classification
+  solution_dir: /mnt/ml-team/minerva/cache/whales/new_experiment/alignment
 
   # Cloud setup
   #data_dir: /public/whales

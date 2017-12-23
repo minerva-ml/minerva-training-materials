@@ -92,6 +92,9 @@ class Trainer(BasicTrainer):
 def load_whale_data(cloud_mode):
     meta_filepath = config['trainer']['metadata']
 
+    if cloud_mode:
+        meta_filepath = meta_filepath.replace('metadata', 'meta_data')
+
     meta_data_ = pd.read_csv(meta_filepath)
     meta_data = meta_data_.reset_index(drop=True)
 

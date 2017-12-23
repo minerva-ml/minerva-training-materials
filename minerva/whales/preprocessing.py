@@ -224,7 +224,6 @@ class DataLoaderLocalizer(DataLoaderBasic):
         super().__init__(dataset_params, loader_params)
         self.dataset = DatasetLocalizer
 
-
     def datagen_builder(self, X, y, dataset_params, loader_params):
         dataset = self.dataset(X, y, **dataset_params)
         datagen = DataLoader(dataset, **loader_params)
@@ -256,10 +255,8 @@ class DataLoaderAligner(DataLoaderBasic):
         else:
             valid_flow = None
             valid_steps = None
-
         return {'datagen': (flow, steps),
                 'validation_datagen': (valid_flow, valid_steps)}
-
 
     def datagen_builder(self, X, y, crop_coordinates, dataset_params, loader_params):
         dataset = self.dataset(X, y, crop_coordinates, **dataset_params)
@@ -294,7 +291,6 @@ class DataLoaderClassifier(DataLoaderBasic):
 
         return {'datagen': (flow, steps),
                 'validation_datagen': (valid_flow, valid_steps)}
-
 
     def datagen_builder(self, X, y, align_coordinates, dataset_params, loader_params):
         dataset = self.dataset(X, y, align_coordinates, **dataset_params)

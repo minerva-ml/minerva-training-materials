@@ -19,11 +19,10 @@ def dry_run(sub_problem, eval_mode, dev_mode, cloud_mode):
 
     pipeline = pipeline_dict[sub_problem]
     trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, cloud_mode, sub_problem)
-    if eval_mode:
-        _evaluate(trainer, sub_problem)
-    else:
+
+    if eval_mode == 'false':
         trainer.train()
-        _evaluate(trainer, sub_problem)
+    _evaluate(trainer, sub_problem)
 
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
