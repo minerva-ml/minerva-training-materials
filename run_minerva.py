@@ -15,16 +15,16 @@ def action():
 @action.command()
 @click.option('-p', '--problem', help='problem to choose', required=True)
 @click.option('-s', '--sub_problem', help='sub problem to choose', required=False)
-@click.option('-e', '--eval_mode', help='evaluate only mode', default=True, required=False)
+@click.option('-t', '--train_mode', help='train mode on', type=bool, default=False, required=False)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
-def dry_run(problem, sub_problem, eval_mode, dev_mode, cloud_mode):
+def dry_run(problem, sub_problem, train_mode, dev_mode, cloud_mode):
     if problem == 'whales':
         setup_torch_multiprocessing()
 
     pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
     logging.info('running: {0}'.format(sub_problem))
-    pm.dry_run(sub_problem, eval_mode, dev_mode, cloud_mode)
+    pm.dry_run(sub_problem, train_mode, dev_mode, cloud_mode)
 
 
 @action.command()

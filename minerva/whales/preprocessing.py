@@ -180,29 +180,11 @@ class DataLoaderBasic(BaseTransformer):
         self.loader_params = loader_params
         self._unpack_params()
 
-        self.datagen_builder = None
-
     def _unpack_params(self):
         self.inference_dataset_params = self.dataset_params['inference']
         self.inference_loader_params = self.loader_params['inference']
         self.train_dataset_params = self.dataset_params['train']
         self.train_loader_params = self.loader_params['train']
-
-    def load(self, filepath):
-        params = joblib.load(filepath)
-        self.dataset_params = params['dataset_params']
-        self.loader_params = params['loader_params']
-        return self
-
-    def save(self, filepath):
-        params = {'dataset_params': self.dataset_params, 'loader_params': self.loader_params}
-        joblib.dump(params, filepath)
-
-
-class DataLoaderLocalizer(DataLoaderBasic):
-    def __init__(self, dataset_params, loader_params):
-        super().__init__(dataset_params, loader_params)
-        self.datagen_builder = get_datagen_localizer
 
     def transform(self, X, y, validation_data, train_mode):
         if train_mode:
@@ -226,20 +208,36 @@ class DataLoaderLocalizer(DataLoaderBasic):
         return {'datagen': (flow, steps),
                 'validation_datagen': (valid_flow, valid_steps)}
 
+    def load(self, filepath):
+        params = joblib.load(filepath)
+        self.dataset_params = params['dataset_params']
+        self.loader_params = params['loader_params']
+        return self
 
-def get_datagen_localizer(X, y, dataset_params, loader_params):
-    dataset = DatasetLocalizer(X, y, **dataset_params)
-    datagen = DataLoader(dataset, **loader_params)
-    steps = ceil(X.shape[0] / loader_params['batch_size'])
-    return datagen, steps
+    def save(self, filepath):
+        params = {'dataset_params': self.dataset_params, 'loader_params': self.loader_params}
+        joblib.dump(params, filepath)
+
+
+class DataLoaderLocalizer(DataLoaderBasic):
+    def __init__(self, dataset_params, loader_params):
+        super().__init__(dataset_params, loader_params)
+        self.dataset = DatasetLocalizer
+
+    def datagen_builder(self, X, y, dataset_params, loader_params):
+        dataset = self.dataset(X, y, **dataset_params)
+        datagen = DataLoader(dataset, **loader_params)
+        steps = ceil(X.shape[0] / loader_params['batch_size'])
+        return datagen, steps
 
 
 class DataLoaderAligner(DataLoaderBasic):
     def __init__(self, dataset_params, loader_params):
         super().__init__(dataset_params, loader_params)
-        self.datagen_builder = get_datagen_aligner
+        self.dataset = DatasetAligner
 
     def transform(self, X, y, crop_coordinates, validation_data, train_mode):
+
         if train_mode:
             flow, steps = self.datagen_builder(X, y, crop_coordinates,
                                                self.train_dataset_params,
@@ -257,22 +255,20 @@ class DataLoaderAligner(DataLoaderBasic):
         else:
             valid_flow = None
             valid_steps = None
-
         return {'datagen': (flow, steps),
                 'validation_datagen': (valid_flow, valid_steps)}
 
-
-def get_datagen_aligner(X, y, crop_coordinates, dataset_params, loader_params):
-    dataset = DatasetAligner(X, y, crop_coordinates, **dataset_params)
-    datagen = DataLoader(dataset, **loader_params)
-    steps = ceil(X.shape[0] / loader_params['batch_size'])
-    return datagen, steps
+    def datagen_builder(self, X, y, crop_coordinates, dataset_params, loader_params):
+        dataset = self.dataset(X, y, crop_coordinates, **dataset_params)
+        datagen = DataLoader(dataset, **loader_params)
+        steps = ceil(X.shape[0] / loader_params['batch_size'])
+        return datagen, steps
 
 
 class DataLoaderClassifier(DataLoaderBasic):
     def __init__(self, dataset_params, loader_params):
         super().__init__(dataset_params, loader_params)
-        self.datagen_builder = get_datagen_classifier
+        self.dataset = DatasetClassifier
 
     def transform(self, X, y, align_coordinates, validation_data, train_mode):
         if train_mode:
@@ -296,12 +292,11 @@ class DataLoaderClassifier(DataLoaderBasic):
         return {'datagen': (flow, steps),
                 'validation_datagen': (valid_flow, valid_steps)}
 
-
-def get_datagen_classifier(X, y, align_coordinates, dataset_params, loader_params):
-    dataset = DatasetClassifier(X, y, align_coordinates, **dataset_params)
-    datagen = DataLoader(dataset, **loader_params)
-    steps = ceil(X.shape[0] / loader_params['batch_size'])
-    return datagen, steps
+    def datagen_builder(self, X, y, align_coordinates, dataset_params, loader_params):
+        dataset = self.dataset(X, y, align_coordinates, **dataset_params)
+        datagen = DataLoader(dataset, **loader_params)
+        steps = ceil(X.shape[0] / loader_params['batch_size'])
+        return datagen, steps
 
 
 def localizer_preprocessing(img, target, augmentation, target_size, bins_nr):

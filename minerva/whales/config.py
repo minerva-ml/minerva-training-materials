@@ -159,7 +159,7 @@ SOLUTION_CONFIG = {
                                                                             },
                                                                  },
                                                 },
-                        'training_config': {'epochs': 500},
+                        'training_config': {'epochs': 1000},
                         'callbacks_config': {'model_checkpoint': {
                             'checkpoint_dir': os.path.join(exp_root, 'checkpoints', 'aligner_network'),
                             'epoch_every': 1
@@ -236,5 +236,5 @@ SOLUTION_CONFIG = {
                                                     },
                            },
                            },
-    'probability_calibration': {'power': 1.35},
+    'classifier_calibrator': {'power': 1.35},
 }
