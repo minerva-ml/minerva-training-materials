@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
-from deepsense import neptune
 from torch.optim.lr_scheduler import ExponentialLR
 
 from minerva.backend.models.pytorch.utils import overlay_box, overlay_keypoints, Averager, save_model
@@ -333,6 +332,7 @@ class ModelCheckpoint(Callback):
 class NeptuneMonitor(Callback):
     def __init__(self):
         super().__init__()
+        from deepsense import neptune
         self.ctx = neptune.Context()
         self.epoch_loss_averager = Averager()
         self.epoch_acc_averager = Averager()
