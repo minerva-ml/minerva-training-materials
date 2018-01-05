@@ -11,24 +11,25 @@ Minerva is an educational project that lets you learn advanced data science on r
 ---
 
 ## Hands-on approach to learning
-With Minerva you will reproduce, piece by piece, solution to the most difficult data scientific problems, especially challenges. Since each **problem** is quite complex, we have divided it into a collection of small self-contained pieces called **tasks**.
+With Minerva you will reproduce, piece by piece, a solution to the most difficult data scientific problems, especially challenges. Since each **problem** is quite complex, we divided it into a collection of small self-contained pieces called **tasks**.
 
-**Task** is a single step in machine learning pipeline, has its own learning objectives, descriptions and a piece of code that needs to be implemented. This is your job, create technical implementation that fulfill this gap. You use your engineering skills, extensive experimentation and our feedback, in order to make sure that your implementation meets certain quality level. We know what the final score for a well implemented pipeline should be. So as you solve tasks and re-implement parts of the pipeline we will be checking whether your implementation does the job well enough to keep the score high.
+**Task** is a single step in machine learning pipeline, it has its own learning objectives, descriptions and a piece of code that needs to be implemented. This is your job: to create a technical implementation that fulfills this gap. You use your engineering skills, extensive experimentation and our feedback in order to make sure that your implementation meets certain quality level. We know what the final score for a well implemented pipeline should be. So as you solve tasks and re-implement parts of the pipeline we will be checking whether your implementation does the job well enough to keep the score high.
 
 ## Reproduce Kaggle winning solutions in a transparent way &rarr; learn advanced data science
-Working on **tasks** that, if taken together, creates solution to the **problem** lets you reproduce Kaggle winning solution, piece by piece. This is our hands on approach to learning, because you can work on each part of the winning implementation by yourself.
+Working on **tasks** that, if taken together, create solution to the **problem** lets you reproduce Kaggle winning solution, piece by piece. This is our hands on approach to learning, because you can work on each part of the winning implementation by yourself.
 
 ## Available problems
 
 | Problem        | Description   |
 | -------------- | ------------- |
-| Fashion mnist  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
-| Whales         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
+| [Fashion mnist](https://github.com/neptune-ml/minerva/blob/master/resources/fashion_mnist/problems/hello-fashion_mnist.ipynb)  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
+| [Whales](https://github.com/neptune-ml/minerva/blob/master/resources/whales/problems/hello-whales.ipynb)         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
 | | *(more problems will be published in the future, so stay tuned)* |
 
 ## User support
 You can seek support in two ways:
-1. Check [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki'), for typical problems and questions.
+
+1. Check [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki') for typical problems and questions.
 2. Create an issue with label `question`, in case [Minerva wiki](https://github.com/neptune-ml/minerva/wiki 'Minerva wiki') does not have an answer to your question.
 
 ## Contributing to Minerva
