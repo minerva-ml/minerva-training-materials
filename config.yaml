@@ -6,7 +6,7 @@ parameters:
 
   # Dev setup
   data_dir: /mnt/ml-team/minerva/user_data_dir/whales
-  solution_dir: /mnt/ml-team/minerva/cache/whales/new_experiment/alignment
+  solution_dir: /mnt/ml-team/minerva/cache/kuba/fashion_mnist/test_experiment
 
   # Cloud setup
   #data_dir: /public/whales
@@ -23,6 +23,7 @@ exclude:
   - offline_job.log
   - .idea
   - .git
+  - .ipynb_checkpoints
 
 # Comment if local
 #pip-requirements-file: requirements.txt

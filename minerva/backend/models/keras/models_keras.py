@@ -1,4 +1,4 @@
-# from keras.models import load_model
+from keras.models import load_model
 
 from minerva.backend.base import BaseTransformer
 
