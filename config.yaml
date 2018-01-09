@@ -4,13 +4,17 @@ name: minerva
 
 parameters:
 
-  # Cloud setup
-#  data_dir: /public/whales
-#  solution_dir: /output/resources/whales/solution/classification
-
   # Local setup
-  data_dir: path/to/your/data # for instance resources/whales/data
-  solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
+  #data_dir: path/to/your/data # for instance resources/whales/data
+  #solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
+
+  # Cloud setup
+  #data_dir: /public/whales
+  #solution_dir: /output/resources/whales/solution/classification
+
+  # Dev setup
+  data_dir: /mnt/ml-team/minerva/user_data_dir/whales
+  solution_dir: /mnt/ml-team/minerva/cache/whales/new_experiment/alignment
 
 exclude:
   - resources
@@ -19,7 +23,6 @@ exclude:
   - offline_job.log
   - .idea
   - .git
-  - .ipynb_checkpoints
 
 # Comment if local
 # pip-requirements-file: requirements.txt
