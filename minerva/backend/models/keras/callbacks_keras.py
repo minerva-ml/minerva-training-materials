@@ -10,13 +10,11 @@ class NeptuneMonitor(Callback):
 
 	def on_batch_end(self, batch, logs={}):
 		self.batch_id += 1
-
 		self.ctx.channel_send('Batch Log-loss training', self.batch_id, logs['loss'])
 		self.ctx.channel_send('Batch Accuracy training', self.batch_id, logs['acc'])
 
 	def on_epoch_end(self, epoch, logs={}):
 		self.epoch_id += 1
-
 		self.ctx.channel_send('Log-loss training', self.epoch_id, logs['loss'])
 		self.ctx.channel_send('Log-loss validation', self.epoch_id, logs['val_loss'])
 		self.ctx.channel_send('Accuracy training', self.epoch_id, logs['acc'])

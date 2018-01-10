@@ -19,7 +19,7 @@ def _welcome_message(fn):
 
 @_welcome_message
 def init_logger():
-    logger = logging.getLogger('minerva-whales')
+    logger = logging.getLogger('minerva')
     logger.setLevel(logging.INFO)
     message_format = logging.Formatter(fmt='%(asctime)s %(name)s >>> %(message)s',
                                        datefmt='%Y-%m-%d %H-%M-%S')
@@ -42,7 +42,7 @@ def init_logger():
 
 
 def get_logger():
-    return logging.getLogger('minerva-whales')
+    return logging.getLogger('minerva')
 
 
 def copy_resources():
