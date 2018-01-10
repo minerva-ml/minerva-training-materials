@@ -11,7 +11,6 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
         copy_resources()
 
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
-    print(train_mode, type(train_mode))
     if train_mode:
         trainer.train()
     _evaluate(trainer)
