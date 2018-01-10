@@ -4,17 +4,13 @@ name: minerva
 
 parameters:
 
-  # Dev setup
-  data_dir: /mnt/ml-team/minerva/user_data_dir/whales
-  solution_dir: /mnt/ml-team/minerva/cache/kuba/fashion_mnist/test_experiment
-
   # Cloud setup
-  #data_dir: /public/whales
-  #solution_dir: /output/resources/whales/solution/classification
+#  data_dir: /public/whales
+#  solution_dir: /output/resources/whales/solution/classification
 
   # Local setup
-  #data_dir: path/to/your/data # for instance resources/whales/data
-  #solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
+  data_dir: path/to/your/data # for instance resources/whales/data
+  solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
 
 exclude:
   - resources
