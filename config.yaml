@@ -14,7 +14,7 @@ parameters:
 
   # Dev setup
   data_dir: /mnt/ml-team/minerva/user_data_dir/whales
-  solution_dir: /mnt/ml-team/minerva/cache/whales/new_experiment/alignment
+  solution_dir: /mnt/ml-team/minerva/cache/patryk
 
 exclude:
   - resources
