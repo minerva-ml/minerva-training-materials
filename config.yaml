@@ -10,7 +10,7 @@ parameters:
 
   # Cloud setup
   data_dir: /public/whales
-  solution_dir: /output/resources/path_to_your_solution
+  solution_dir: /output/path_to_your_solution
 
 exclude:
   - resources
