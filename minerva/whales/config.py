@@ -33,8 +33,7 @@ TARGET_COLUMNS = {'localization': LOCALIZER_TARGET_COLUMNS,
                   'end_to_end': CLASSIFIER_TARGET_COLUMNS
                   }
 
-GLOBAL_CONFIG = {'log_file': exp_root + '/minerva.log',
-                 'exp_name': exp_name,
+GLOBAL_CONFIG = {'exp_name': exp_name,
                  'exp_root': exp_root,
                  'num_workers': 6,
                  'callosity_classes': 3,
