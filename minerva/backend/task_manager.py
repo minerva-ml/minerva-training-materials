@@ -30,18 +30,20 @@ class TaskSolutionParser(object):
     """
 
     def __init__(self, filepath):
-        self.filepath = filepath
+        self.filepath = os.path.abspath(filepath)
 
     def __enter__(self):
         if self.filepath.endswith('.ipynb'):
             cmd = 'jupyter nbconvert --to python {}'.format(self.filepath)
             subprocess.call(cmd, shell=True)
-            filepath = self.filepath.replace('.ipynb', '.py')
+            module_filepath = self.filepath.replace('.ipynb', '.py')
         else:
-            filepath = self.filepath
+            module_filepath = self.filepath
 
-        module_dir, module_filename = os.path.split(filepath)
+        module_dir, module_filename = os.path.split(module_filepath)
         module_name = module_filename.replace('.py', '')
+        if module_filename not in os.listdir(module_dir):
+            raise ValueError('Failed to convert your solution to pipeline element. Likely problem is indentation format')
         sys.path.append(module_dir)
         task_solution = vars(import_module(module_name))
         return task_solution

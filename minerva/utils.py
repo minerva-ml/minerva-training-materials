@@ -1,8 +1,6 @@
 import subprocess
 import logging
 
-from minerva.whales.config import GLOBAL_CONFIG
-
 
 def setup_torch_multiprocessing():
     import torch.multiprocessing as mp
@@ -24,12 +22,12 @@ def init_logger():
     message_format = logging.Formatter(fmt='%(asctime)s %(name)s >>> %(message)s',
                                        datefmt='%Y-%m-%d %H-%M-%S')
 
-    # setup file handler and message format
-    log_file = GLOBAL_CONFIG['log_file']
-    fh_tr = logging.FileHandler(filename=log_file, mode='w')  # fh_training.close()
-    fh_tr.setLevel(logging.INFO)
-    fh_tr.setFormatter(fmt=message_format)
-    logger.addHandler(fh_tr)
+    # # setup file handler and message format
+    # log_file = GLOBAL_CONFIG['log_file']
+    # fh_tr = logging.FileHandler(filename=log_file, mode='w')  # fh_training.close()
+    # fh_tr.setLevel(logging.INFO)
+    # fh_tr.setFormatter(fmt=message_format)
+    # logger.addHandler(fh_tr)
 
     # console handler for validation info
     ch_va = logging.StreamHandler()
