@@ -10,7 +10,8 @@ parameters:
 
   # Local setup
   data_dir: path/to/your/data # for instance resources/whales/data
-  solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
+#  solution_dir:  path/to/your/solution # for instance resources/whales/solution/localization
+  solution_dir: /mnt/ml-team/homes/jakub.czakon/code/minerva/resources/fashion_mnist/solution
 
 exclude:
   - resources

@@ -51,7 +51,7 @@ SOLUTION_CONFIG = {
                                                            },
                                       },
               'training_config': {'epochs': 200},
-              'callbacks_config': {'patience': 20,
+              'callbacks_config': {'patience': 10,
                                    'model_name': 'simplenet'}
               },
 }
