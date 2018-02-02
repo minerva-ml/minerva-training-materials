@@ -1,3 +1,5 @@
+from keras import backend as K
+
 from minerva.utils import copy_resources
 from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
@@ -16,6 +18,8 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
         trainer.train()
     _evaluate(trainer)
 
+    K.clear_session()
+
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
     if cloud_mode:
@@ -27,6 +31,8 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
     new_trainer = task_handler.substitute(user_task_solution, user_config)
     new_trainer.train()
     _evaluate(new_trainer)
+
+    K.clear_session()
 
 
 def _fetch_task_solution(filepath):
