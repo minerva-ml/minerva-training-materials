@@ -46,3 +46,17 @@ def get_logger():
 def copy_resources():
     cmd = 'cp -rf /public/minerva/resources /output'
     subprocess.call(cmd, shell=True)
+
+
+SUBPROBLEM_INFERENCE = {'whales': {1: 'localization',
+                                   2: 'alignment',
+                                   3: 'classification',
+                                   4: 'localization',
+                                   5: 'localization',
+                                   6: 'classification',
+                                   7: 'localization',
+                                   8: 'alignment',
+                                   9: 'classification',
+                                   },
+                        'fashion_mnist': {}
+                        }
