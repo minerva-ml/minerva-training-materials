@@ -8,15 +8,14 @@ parameters:
 #  data_dir: resources/whales/data # for instance resources/whales/data
 #  solution_dir:  output/path_to_your_solution # for instance /output/resources/whales/solution/localization
 
-  data_dir: /public
-  solution_dir:  /output/resources/fashion_mnist/solution
-
   # Cloud setup
-#  data_dir: /public/whales # for instance /public/whales
-#  solution_dir: /output/path_to_your_solution # /output/path_to_your_solution
+  data_dir: /public/whales # for instance /public/whales
+  solution_dir: /output/path_to_your_solution # /output/path_to_your_solution
 
 exclude:
-  - resources
+  - resources/fashion_mnist/solution
+  - resources/whales/solution
+  - resources/whales/data
   - output
   - neptune.log
   - offline_job.log
@@ -25,4 +24,4 @@ exclude:
   - .ipynb_checkpoints
 
 # Comment if local
-#pip-requirements-file: requirements.txt
+pip-requirements-file: requirements.txt
