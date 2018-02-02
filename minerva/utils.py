@@ -1,3 +1,4 @@
+import os
 import subprocess
 import logging
 
@@ -46,3 +47,21 @@ def get_logger():
 def copy_resources():
     cmd = 'cp -rf /public/minerva/resources /output'
     subprocess.call(cmd, shell=True)
+
+
+def handle_empty_solution_dir(train_mode, config, pipeline):
+    if not train_mode:
+        solution_path = config['global']['cache_dirpath']
+        if 'transformers' not in os.listdir(solution_path):
+            raise ValueError(
+                """Specified solution_dir is missing 'transformers' directory. Use dry_run with train_mode=True or specify the path to trained pipeline
+                """)
+
+        else:
+            transformers_in_dir = set(os.listdir(os.path.join(solution_path, 'transformers')))
+            transformers_in_pipeline = set(pipeline(config).all_steps.keys())
+
+            if not transformers_in_pipeline == transformers_in_dir:
+                missing_transformers = transformers_in_pipeline - transformers_in_dir
+                raise ValueError(
+                    """Specified solution_dir is missing trained transformers: {}. Use dry_run with train_mode=True or specify the path to trained pipeline""".format(list(missing_transformers)))

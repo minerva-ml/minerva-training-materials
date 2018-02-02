@@ -1,4 +1,6 @@
-from minerva.utils import copy_resources
+import os
+
+from minerva.utils import copy_resources, handle_empty_solution_dir
 from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
 from .tasks import *
@@ -11,6 +13,8 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     if cloud_mode:
         copy_resources()
 
+    handle_empty_solution_dir(train_mode, SOLUTION_CONFIG, solution_pipeline)
+
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     if train_mode:
         trainer.train()
@@ -20,6 +24,9 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
 def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
     if cloud_mode:
         copy_resources()
+
+    handle_empty_solution_dir(train_mode=False, config=SOLUTION_CONFIG, pipeline=solution_pipeline)
+
 
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     user_task_solution, user_config = _fetch_task_solution(filepath)
