@@ -27,7 +27,6 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
 
     handle_empty_solution_dir(train_mode=False, config=SOLUTION_CONFIG, pipeline=solution_pipeline)
 
-
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)
