@@ -1,5 +1,3 @@
-import os
-from datetime import datetime
 import yaml
 
 with open('neptune.yaml') as f:

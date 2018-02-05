@@ -1,6 +1,6 @@
 import os
+
 import yaml
-from datetime import datetime
 
 with open('neptune.yaml') as f:
     config = yaml.load(f)

@@ -1,7 +1,6 @@
 import numpy as np
 
 from minerva.utils import copy_resources, handle_empty_solution_dir
-from .tasks import *
 from .config import SOLUTION_CONFIG
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
 from .registry import registered_tasks, registered_scores

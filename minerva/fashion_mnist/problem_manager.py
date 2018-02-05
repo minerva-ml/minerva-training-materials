@@ -1,12 +1,8 @@
 from keras import backend as K
 
-from minerva.utils import copy_resources
-import os
-
 from minerva.utils import copy_resources, handle_empty_solution_dir
 from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
-from .tasks import *
 from .registry import registered_tasks, registered_score
 from .trainer import Trainer
 from ..backend.task_manager import TaskSolutionParser
