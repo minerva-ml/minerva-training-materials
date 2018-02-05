@@ -3,17 +3,18 @@ project-key: MIN
 name: minerva
 
 parameters:
-
-  # Local setup
+# Local setup
   data_dir: path/to/your/data # for instance resources/whales/data
-  solution_dir:  output/path_to_your_solution # for instance /output/resources/whales/solution/localization
+  solution_dir: output/path_to_your_solution # for instance /output/resources/whales/solution/localization
 
-  # Cloud setup
-  #data_dir: /public/whales
-  #solution_dir: /output/path_to_your_solution
+# Cloud setup
+#  data_dir: /public/whales # for instance /public/whales
+#  solution_dir: /output/path_to_your_solution # /output/path_to_your_solution
 
 exclude:
-  - resources
+  - resources/fashion_mnist/solution
+  - resources/whales/solution
+  - resources/whales/data
   - output
   - neptune.log
   - offline_job.log
