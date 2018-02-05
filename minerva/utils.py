@@ -23,17 +23,9 @@ def init_logger():
     message_format = logging.Formatter(fmt='%(asctime)s %(name)s >>> %(message)s',
                                        datefmt='%Y-%m-%d %H-%M-%S')
 
-    # # setup file handler and message format
-    # log_file = GLOBAL_CONFIG['log_file']
-    # fh_tr = logging.FileHandler(filename=log_file, mode='w')  # fh_training.close()
-    # fh_tr.setLevel(logging.INFO)
-    # fh_tr.setFormatter(fmt=message_format)
-    # logger.addHandler(fh_tr)
-
     # console handler for validation info
     ch_va = logging.StreamHandler()
     ch_va.setLevel(logging.INFO)
-
     ch_va.setFormatter(fmt=message_format)
 
     # add the handlers to the logger
@@ -56,7 +48,6 @@ def handle_empty_solution_dir(train_mode, config, pipeline):
             raise ValueError(
                 """Specified solution_dir is missing 'transformers' directory. Use dry_run with train_mode=True or specify the path to trained pipeline
                 """)
-
         else:
             transformers_in_dir = set(os.listdir(os.path.join(solution_path, 'transformers')))
             transformers_in_pipeline = set(pipeline(config).all_steps.keys())
@@ -65,3 +56,17 @@ def handle_empty_solution_dir(train_mode, config, pipeline):
                 missing_transformers = transformers_in_pipeline - transformers_in_dir
                 raise ValueError(
                     """Specified solution_dir is missing trained transformers: {}. Use dry_run with train_mode=True or specify the path to trained pipeline""".format(list(missing_transformers)))
+
+
+SUBPROBLEM_INFERENCE = {'whales': {1: 'localization',
+                                   2: 'alignment',
+                                   3: 'classification',
+                                   4: 'localization',
+                                   5: 'localization',
+                                   6: 'classification',
+                                   7: 'localization',
+                                   8: 'alignment',
+                                   9: 'classification',
+                                   },
+                        'fashion_mnist': {}
+                        }

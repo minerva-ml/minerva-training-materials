@@ -13,7 +13,9 @@ parameters:
   solution_dir: /output/path_to_your_solution # /output/path_to_your_solution
 
 exclude:
-  - resources
+  - resources/fashion_mnist/solution
+  - resources/whales/solution
+  - resources/whales/data
   - output
   - neptune.log
   - offline_job.log
