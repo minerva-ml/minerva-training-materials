@@ -3,7 +3,6 @@ project-key: MIN
 name: minerva
 
 parameters:
-
 # Local setup
   data_dir: path/to/your/data # for instance resources/whales/data
   solution_dir: output/path_to_your_solution # for instance /output/resources/whales/solution/localization
