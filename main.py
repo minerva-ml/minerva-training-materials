@@ -22,7 +22,7 @@ def dry_run(problem, train_mode, dev_mode, cloud_mode):
         setup_torch_multiprocessing()
 
     subproblems = SUBPROBLEM_INFERENCE.get(problem)
-    if subproblems:
+    if subproblems is not None:
         for sub_problem in list(set(subproblems.values())):
             pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
             logging.info('running: {0}'.format(sub_problem))
