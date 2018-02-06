@@ -17,12 +17,12 @@ def action():
 @click.option('-t', '--train_mode', help='train mode on', type=bool, default=True, required=False)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
-def dry_run(problem, sub_problem, train_mode, dev_mode, cloud_mode):
+def dry_run(problem, train_mode, dev_mode, cloud_mode):
     if problem == 'whales':
         setup_torch_multiprocessing()
 
     subproblems = SUBPROBLEM_INFERENCE.get(problem)
-    if subproblems is not None:
+    if subproblems:
         for sub_problem in list(set(subproblems.values())):
             pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
             logging.info('running: {0}'.format(sub_problem))
