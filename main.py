@@ -17,7 +17,7 @@ def action():
 @click.option('-t', '--train_mode', help='train mode on', type=bool, default=True, required=False)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
-def dry_run(problem, sub_problem, train_mode, dev_mode, cloud_mode):
+def dry_run(problem, train_mode, dev_mode, cloud_mode):
     if problem == 'whales':
         setup_torch_multiprocessing()
 
