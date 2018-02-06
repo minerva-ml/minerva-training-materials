@@ -67,6 +67,5 @@ SUBPROBLEM_INFERENCE = {'whales': {1: 'localization',
                                    7: 'localization',
                                    8: 'alignment',
                                    9: 'classification',
-                                   },
-                        'fashion_mnist': {}
+                                   }
                         }
