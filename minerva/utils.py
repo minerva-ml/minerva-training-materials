@@ -52,10 +52,19 @@ def handle_empty_solution_dir(train_mode, config, pipeline):
             transformers_in_dir = set(os.listdir(os.path.join(solution_path, 'transformers')))
             transformers_in_pipeline = set(pipeline(config).all_steps.keys())
 
-            if not transformers_in_pipeline == transformers_in_dir:
+            if not transformers_in_dir.issuperset(transformers_in_pipeline):
                 missing_transformers = transformers_in_pipeline - transformers_in_dir
                 raise ValueError(
-                    """Specified solution_dir is missing trained transformers: {}. Use dry_run with train_mode=True or specify the path to trained pipeline""".format(list(missing_transformers)))
+                    """Specified solution_dir is missing trained transformers: {}. Use dry_run with train_mode=True or specify the path to trained pipeline""".format(
+                        list(missing_transformers)))
+
+
+def process_config(solution_config, global_config, sub_problem):
+    config = solution_config
+    experimet_dir = global_config['exp_root']
+    if not experimet_dir.endswith(sub_problem):
+        config = eval(str(config).replace(experimet_dir, os.path.join(experimet_dir, sub_problem)))
+    return config
 
 
 SUBPROBLEM_INFERENCE = {'whales': {1: 'localization',
