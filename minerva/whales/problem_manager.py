@@ -2,6 +2,7 @@ import numpy as np
 
 from minerva.utils import copy_resources, handle_empty_solution_dir
 from .config import SOLUTION_CONFIG
+from .tasks import *
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
 from .registry import registered_tasks, registered_scores
 from .trainer import Trainer
@@ -45,6 +46,7 @@ def _fetch_task_solution(filepath):
     with TaskSolutionParser(filepath) as task_solution:
         user_solution = task_solution.get('solution')
         user_config = task_solution.get('CONFIG')
+        print(user_solution, user_config)
     return user_solution, user_config
 
 

@@ -40,6 +40,8 @@ def dry_run(problem, train_mode, dev_mode, cloud_mode):
 @click.option('-f', '--filepath', type=str, help='filepath_to_solution')
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
 def submit(problem, task_nr, filepath, dev_mode, cloud_mode):
+    if filepath is None:
+        filepath = 'resources/{}/tasks/task{}.ipynb'.format(problem, task_nr)
     if problem == 'whales':
         setup_torch_multiprocessing()
 
