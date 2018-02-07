@@ -1,7 +1,6 @@
 import numpy as np
 
-from minerva.utils import copy_resources
-from .tasks import *
+from minerva.utils import copy_resources, handle_empty_solution_dir
 from .config import SOLUTION_CONFIG
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
 from .registry import registered_tasks, registered_scores
@@ -18,6 +17,8 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
         copy_resources()
 
     pipeline = pipeline_dict[sub_problem]
+    handle_empty_solution_dir(train_mode, SOLUTION_CONFIG, pipeline)
+
     trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, cloud_mode, sub_problem)
 
     if train_mode:
@@ -30,6 +31,8 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
         copy_resources()
 
     pipeline = pipeline_dict[sub_problem]
+    handle_empty_solution_dir(train_mode=False, config=SOLUTION_CONFIG, pipeline=pipeline)
+
     trainer = Trainer(pipeline, SOLUTION_CONFIG, dev_mode, cloud_mode, sub_problem)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)
@@ -40,8 +43,8 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
 
 def _fetch_task_solution(filepath):
     with TaskSolutionParser(filepath) as task_solution:
-        user_solution = task_solution['solution']
-        user_config = task_solution['CONFIG']
+        user_solution = task_solution.get('solution')
+        user_config = task_solution.get('CONFIG')
     return user_solution, user_config
 
 

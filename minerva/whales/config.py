@@ -1,8 +1,8 @@
 import os
-import yaml
-from datetime import datetime
 
-with open('config.yaml') as f:
+import yaml
+
+with open('neptune.yaml') as f:
     config = yaml.load(f)
 exp_name = config['name']
 exp_root = config['parameters']['solution_dir']

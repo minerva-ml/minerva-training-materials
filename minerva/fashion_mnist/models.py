@@ -3,8 +3,8 @@ from keras.layers import Flatten, Dense, Dropout, Input, Conv2D, MaxPool2D
 from keras.models import Model
 from keras.optimizers import SGD
 
-from minerva.backend.models.keras.models_keras import BasicKerasClassifier
-from minerva.backend.models.keras.callbacks_keras import NeptuneMonitor
+from minerva.backend.models.keras.models import BasicKerasClassifier
+from minerva.backend.models.keras.callbacks import NeptuneMonitor
 
 
 class SimpleClassifier(BasicKerasClassifier):

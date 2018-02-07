@@ -1,7 +1,8 @@
-from minerva.utils import copy_resources
+from keras import backend as K
+
+from minerva.utils import copy_resources, handle_empty_solution_dir
 from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
-from .tasks import *
 from .registry import registered_tasks, registered_score
 from .trainer import Trainer
 from ..backend.task_manager import TaskSolutionParser
@@ -11,15 +12,21 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     if cloud_mode:
         copy_resources()
 
+    handle_empty_solution_dir(train_mode, SOLUTION_CONFIG, solution_pipeline)
+
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     if train_mode:
         trainer.train()
     _evaluate(trainer)
 
+    K.clear_session()
+
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
     if cloud_mode:
         copy_resources()
+
+    handle_empty_solution_dir(train_mode=False, config=SOLUTION_CONFIG, pipeline=solution_pipeline)
 
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     user_task_solution, user_config = _fetch_task_solution(filepath)
@@ -28,11 +35,13 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
     new_trainer.train()
     _evaluate(new_trainer)
 
+    K.clear_session()
+
 
 def _fetch_task_solution(filepath):
     with TaskSolutionParser(filepath) as task_solution:
-        user_solution = task_solution['solution']
-        user_config = task_solution['CONFIG']
+        user_solution = task_solution.get('solution')
+        user_config = task_solution.get('CONFIG')
     return user_solution, user_config
 
 
