@@ -1,3 +1,4 @@
+import sys
 import subprocess
 import logging
 
@@ -30,7 +31,7 @@ def init_logger():
     # logger.addHandler(fh_tr)
 
     # console handler for validation info
-    ch_va = logging.StreamHandler()
+    ch_va = logging.StreamHandler(sys.stdout)
     ch_va.setLevel(logging.INFO)
 
     ch_va.setFormatter(fmt=message_format)
