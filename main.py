@@ -35,8 +35,8 @@ def dry_run(problem, train_mode, dev_mode, cloud_mode):
 
 @action.command()
 @click.option('-p', '--problem', help='problem to choose', required=True)
+@click.option('-t', '--task_nr', help='task number', required=True)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
-@click.option('-t', '--task_nr', default=1, help='task number')
 @click.option('-f', '--filepath', type=str, help='filepath_to_solution')
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
 def submit(problem, task_nr, filepath, dev_mode, cloud_mode):
