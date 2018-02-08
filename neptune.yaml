@@ -2,6 +2,9 @@ project-key: MIN
 
 name: minerva
 
+# Comment if local
+pip-requirements-file: requirements.txt
+
 parameters:
 # Local setup
 #  data_dir: path/to/your/data # for instance resources/whales/data
@@ -21,6 +24,3 @@ exclude:
   - .idea
   - .git
   - .ipynb_checkpoints
-
-# Comment if local
-pip-requirements-file: requirements.txt
