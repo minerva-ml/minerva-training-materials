@@ -46,7 +46,6 @@ def _fetch_task_solution(filepath):
     with TaskSolutionParser(filepath) as task_solution:
         user_solution = task_solution.get('solution')
         user_config = task_solution.get('CONFIG')
-        print(user_solution, user_config)
     return user_solution, user_config
 
 
