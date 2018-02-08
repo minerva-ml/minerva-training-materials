@@ -1,3 +1,4 @@
+import sys
 import logging
 import os
 import subprocess
@@ -24,7 +25,7 @@ def init_logger():
                                        datefmt='%Y-%m-%d %H-%M-%S')
 
     # console handler for validation info
-    ch_va = logging.StreamHandler()
+    ch_va = logging.StreamHandler(sys.stdout)
     ch_va.setLevel(logging.INFO)
     ch_va.setFormatter(fmt=message_format)
 
