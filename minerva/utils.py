@@ -47,8 +47,8 @@ def handle_empty_solution_dir(train_mode, config, pipeline):
         solution_path = config['global']['cache_dirpath']
         if 'transformers' not in os.listdir(solution_path):
             raise ValueError(
-                """Specified solution_dir is missing 'transformers' directory. Use dry_run with train_mode=True or specify the path to trained pipeline
-                """)
+                """Specified solution_dir {} is missing 'transformers' directory. Use dry_run with train_mode=True or specify the path to trained pipeline
+                """.format(solution_path))
         else:
             transformers_in_dir = set(os.listdir(os.path.join(solution_path, 'transformers')))
             transformers_in_pipeline = set(pipeline(config).all_steps.keys())
@@ -56,7 +56,8 @@ def handle_empty_solution_dir(train_mode, config, pipeline):
             if not transformers_in_pipeline == transformers_in_dir:
                 missing_transformers = transformers_in_pipeline - transformers_in_dir
                 raise ValueError(
-                    """Specified solution_dir is missing trained transformers: {}. Use dry_run with train_mode=True or specify the path to trained pipeline""".format(list(missing_transformers)))
+                    """Specified solution_dir {} is missing trained transformers: {}. Use dry_run with train_mode=True or specify the path to trained pipeline""".format(
+                        solution_path, list(missing_transformers)))
 
 
 SUBPROBLEM_INFERENCE = {'whales': {1: 'localization',
