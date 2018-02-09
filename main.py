@@ -45,8 +45,12 @@ def submit(problem, task_nr, filepath, dev_mode, cloud_mode):
     if problem == 'whales':
         setup_torch_multiprocessing()
 
+    task_nr = int(task_nr)
     subproblems = SUBPROBLEM_INFERENCE.get(problem)
-    task_subproblem = subproblems.get(task_nr)
+    if subproblems:
+        task_subproblem = subproblems.get(task_nr)
+    else:
+        task_subproblem = None
 
     pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
     pm.submit_task(task_subproblem, task_nr, filepath, dev_mode, cloud_mode)
