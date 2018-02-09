@@ -1,6 +1,6 @@
 import cv2
-from imgaug import augmenters as iaa
 import numpy as np
+from imgaug import augmenters as iaa
 
 from .config import LOCALIZER_TARGET_COLUMNS, ALIGNER_TARGET_COLUMNS, CLASSIFIER_TARGET_COLUMNS
 

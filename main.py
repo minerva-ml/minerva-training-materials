@@ -14,10 +14,21 @@ def action():
 
 @action.command()
 @click.option('-p', '--problem', help='problem to choose', required=True)
-@click.option('-t', '--train_mode', help='train mode on', type=bool, default=True, required=False)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
-def dry_run(problem, train_mode, dev_mode, cloud_mode):
+def dry_train(problem, dev_mode, cloud_mode):
+    dry_run(problem, dev_mode, cloud_mode, train_mode=True)
+
+
+@action.command()
+@click.option('-p', '--problem', help='problem to choose', required=True)
+@click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
+@click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
+def dry_eval(problem, dev_mode, cloud_mode):
+    dry_run(problem, dev_mode, cloud_mode, train_mode=False)
+
+
+def dry_run(problem, dev_mode, cloud_mode, train_mode):
     if problem == 'whales':
         setup_torch_multiprocessing()
 

@@ -1,11 +1,10 @@
 from .models import SimpleLocalizer, SimpleAligner, SimpleClassifier
 
-from .postprocessing import DetectionAverage, AlignerAverage, ProbabilityCalibration, UnBinner, Adjuster
+from .postprocessing import ProbabilityCalibration, UnBinner, Adjuster
 from .preprocessing import TargetEncoderPandas, DataLoaderLocalizer, DataLoaderAligner, DataLoaderClassifier
 from .utils import get_crop_coordinates, add_crop_to_validation, get_align_coordinates, add_alignment_to_validation, \
     get_localizer_target_column, get_aligner_target_column, get_classifier_target_column
-from ..backend.base import SubstitutableStep, Dummy, stack_inputs, identity_inputs, exp_transform
-from ..backend.postprocessing import PredictionAverage
+from ..backend.base import SubstitutableStep, Dummy, identity_inputs, exp_transform
 
 
 def localization_pipeline(config):

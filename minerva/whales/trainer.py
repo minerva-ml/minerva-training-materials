@@ -7,8 +7,8 @@ import pandas as pd
 from tqdm import tqdm
 
 from minerva.utils import get_logger
+from .config import SHAPE_COLUMNS, LOCALIZER_COLUMNS, ALIGNER_COLUMNS, CLASSIFIER_COLUMNS
 from .config import SOLUTION_CONFIG as config
-from .config import SHAPE_COLUMNS, LOCALIZER_COLUMNS, ALIGNER_COLUMNS, CLASSIFIER_COLUMNS, TARGET_COLUMNS
 from .validation import SCORE_FUNCTIONS
 from ..backend.cross_validation import train_test_split_atleast_one
 from ..backend.trainer import BasicTrainer

@@ -1,10 +1,10 @@
 from functools import partial
-from tqdm import tqdm
 
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
+from tqdm import tqdm
 
 from minerva.backend.base import BaseTransformer
 from minerva.backend.models.pytorch.validation import torch_acc_score_multi_output, torch_acc_score
