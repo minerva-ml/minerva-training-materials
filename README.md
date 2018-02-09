@@ -22,8 +22,8 @@ Working on **tasks** that, if taken together, create solution to the **problem**
 
 | Problem        | Description   |
 | -------------- | ------------- |
-| [Fashion mnist](https://github.com/neptune-ml/minerva/blob/master/resources/fashion_mnist/problems/hello-fashion_mnist.ipynb)  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
-| [Whales](https://github.com/neptune-ml/minerva/blob/master/resources/whales/problems/hello-whales.ipynb)         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
+| [Fashion mnist](https://github.com/neptune-ml/minerva/blob/master/resources/fashion_mnist/tasks/hello-fashion_mnist.ipynb)  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
+| [Whales](https://github.com/neptune-ml/minerva/blob/master/resources/whales/tasks/hello-whales.ipynb)         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
 | | *(more problems will be published in the future, so stay tuned)* |
 
 ## User support
