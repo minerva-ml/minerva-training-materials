@@ -2,10 +2,13 @@ project-key: MIN
 
 name: minerva
 
+# Comment if local
+#pip-requirements-file: requirements.txt
+
 parameters:
 # Local setup
   data_dir: path/to/your/data # for instance resources/whales/data
-  solution_dir: output/path_to_your_solution # for instance /output/resources/whales/solution/localization
+  solution_dir: resources/fashion_mnist/solution # for instance /output/resources/whales/solution/localization
 
 # Cloud setup
 #  data_dir: /public/whales # for instance /public/whales
@@ -21,6 +24,3 @@ exclude:
   - .idea
   - .git
   - .ipynb_checkpoints
-
-# Comment if local
-#pip-requirements-file: requirements.txt
