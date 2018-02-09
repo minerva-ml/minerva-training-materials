@@ -1,7 +1,7 @@
-import numpy as np
-
-from sklearn.metrics import mean_squared_error, log_loss
 from math import sqrt
+
+import numpy as np
+from sklearn.metrics import mean_squared_error, log_loss
 
 
 def rmse_multi(y_true, y_pred):
