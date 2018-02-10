@@ -7,12 +7,12 @@ name: minerva
 
 parameters:
 # Local setup
-  data_dir: resources/whales/data # for instance resources/whales/data
-  solution_dir: resources/fashion_mnist/solution # for instance output/resources/whales/solution/localization
+  data_dir: resources/whales/data/ # for instance resources/whales/data
+  solution_dir: resources/fashion_mnist/solution/ # resources/fashion_mnist/solution # output/path_to_your_solution # for instance /output/resources/whales/solution/localization
 
 # Cloud setup
 #  data_dir: /public/whales # for instance /public/whales
-#  solution_dir: /public/minerva/resources/fashion_mnist/solution # for instance /output/path_to_your_solution
+#  solution_dir: /public/minerva/resources/fashion_mnist/solution # /output/path_to_your_solution # /output/path_to_your_solution
 
 exclude:
   - resources/fashion_mnist/solution
