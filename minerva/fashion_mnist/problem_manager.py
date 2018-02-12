@@ -1,7 +1,7 @@
 from keras import backend as K
 
-from minerva.utils import copy_resources, handle_empty_solution_dir
-from .config import SOLUTION_CONFIG
+from minerva.utils import copy_resources, handle_empty_solution_dir, handle_dry_train
+from .config import SOLUTION_CONFIG, GLOBAL_CONFIG
 from .pipelines import solution_pipeline
 from .tasks import initialize_tasks
 from .registry import registered_tasks, registered_score
@@ -16,6 +16,7 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     if cloud_mode:
         copy_resources()
 
+    handle_dry_train(train_mode, SOLUTION_CONFIG, solution_pipeline)
     handle_empty_solution_dir(train_mode, SOLUTION_CONFIG, solution_pipeline)
 
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
