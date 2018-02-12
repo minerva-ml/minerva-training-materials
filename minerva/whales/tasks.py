@@ -2,6 +2,10 @@ from .registry import register_task
 from ..backend.task_manager import Task
 
 
+def initialize_tasks():
+    pass
+
+
 @register_task
 class Task1(Task):
     """
@@ -99,6 +103,7 @@ class Task6(Task):
         self.trainer.pipeline.get_step('classifier_calibrator').is_substituted = True
         return self
 
+
 @register_task
 class Task6(Task):
     """
@@ -115,6 +120,7 @@ class Task6(Task):
         self.trainer.pipeline.get_step('classifier_calibrator').is_substituted = True
         return self
 
+
 @register_task
 class Task7(Task):
     """
@@ -127,6 +133,7 @@ class Task7(Task):
         self.trainer.pipeline.get_step('localizer_loader').is_substituted = True
         return self
 
+
 @register_task
 class Task8(Task):
     """
@@ -138,6 +145,7 @@ class Task8(Task):
         self.trainer.pipeline.get_step('aligner_loader').transformer = user_solution()
         self.trainer.pipeline.get_step('aligner_loader').is_substituted = True
         return self
+
 
 @register_task
 class Task9(Task):

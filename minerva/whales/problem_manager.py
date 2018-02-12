@@ -3,9 +3,12 @@ import numpy as np
 from minerva.utils import copy_resources, handle_empty_solution_dir, process_config
 from .config import SOLUTION_CONFIG, GLOBAL_CONFIG
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
+from .tasks import initialize_tasks
 from .registry import registered_tasks, registered_scores
 from .trainer import Trainer
 from ..backend.task_manager import TaskSolutionParser
+
+initialize_tasks()
 
 pipeline_dict = {'localization': localization_pipeline,
                  'alignment': alignment_pipeline,
