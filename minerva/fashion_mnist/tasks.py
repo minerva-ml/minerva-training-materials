@@ -1,8 +1,10 @@
 from .registry import register_task
 from ..backend.task_manager import Task
 
+
 def initialize_tasks():
     pass
+
 
 @register_task
 class Task1(Task):
