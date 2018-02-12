@@ -17,8 +17,7 @@ def solution_pipeline(config):
     output = SubstitutableStep(name='class_predictions',
                                transformer=ClassPredictor(),
                                input_steps=[model],
-                               cache_dirpath=config['global']['cache_dirpath'],
-                               save_graph=True)
+                               cache_dirpath=config['global']['cache_dirpath'])
     return output
 
 
