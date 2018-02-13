@@ -48,7 +48,7 @@ SOLUTION_CONFIG = {
                                                            'nesterov': True
                                                            },
                                       },
-              'training_config': {'epochs': 200},
+              'training_config': {'epochs': 1},
               'callbacks_config': {'patience': 10,
                                    'model_name': 'simplenet'}
               },
