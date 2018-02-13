@@ -79,7 +79,7 @@ def check_inputs(train_mode, config, pipeline):
 
 
 def process_config(config, sub_problem):
-    experiment_dir = config['global']['cache_dirpath']['exp_root']
+    experiment_dir = config['global']['cache_dirpath']
     if not experiment_dir.endswith(sub_problem):
         config = eval(str(config).replace(experiment_dir, os.path.join(experiment_dir, sub_problem)))
     return config
