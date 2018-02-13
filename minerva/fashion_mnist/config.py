@@ -6,12 +6,6 @@ exp_name = config['name']
 exp_root = config['parameters']['solution_dir']
 data_dir = config['parameters']['data_dir']
 
-# exp_name = 'exp_early'
-#
-# exp_start = datetime.now().strftime("%Y%m%d-%H%M%S")
-# exp_root = '/mnt/ml-team/minerva/cache/fashion_mnist/experiments/{}'.format(exp_start + '_' + exp_name)
-# os.makedirs(exp_root, exist_ok=True)
-
 GLOBAL_CONFIG = {'exp_name': exp_name,
                  'exp_root': exp_root,
                  'num_classes': 10,
@@ -48,7 +42,7 @@ SOLUTION_CONFIG = {
                                                            'nesterov': True
                                                            },
                                       },
-              'training_config': {'epochs': 1},
+              'training_config': {'epochs': 200},
               'callbacks_config': {'patience': 10,
                                    'model_name': 'simplenet'}
               },

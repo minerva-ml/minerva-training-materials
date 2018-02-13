@@ -193,7 +193,7 @@ class SubstitutableStep(Step):
 
     @property
     def input_step_is_substituted(self):
-        return any(input_step.is_substituted for input_step in self.input_steps) # Todo this is wrong only input steps not recursive
+        return any(step.is_substituted for step in self.input_steps)
 
     @property
     def _can_load_fit_transform(self):
@@ -202,6 +202,7 @@ class SubstitutableStep(Step):
     @property
     def _can_load_transform(self):
         return self.is_cached
+
 
 class BaseTransformer:
     def __init__(self):
