@@ -7,11 +7,11 @@ name: minerva
 
 parameters:
 # Local setup
-  data_dir: path/to/your/data # for instance resources/whales/data
-  solution_dir: resources/fashion_mnist/solution # for instance /output/resources/whales/solution/localization
+  data_dir:     path/to/your/data # for instance resources/whales/data
+  solution_dir: output/path_to_your_solution # for instance /output/resources/whales/solution/localization
 
 # Cloud setup
-#  data_dir: /public/whales # for instance /public/whales
+#  data_dir:     /public/whales
 #  solution_dir: /output/path_to_your_solution # /output/path_to_your_solution
 
 exclude:
@@ -24,3 +24,4 @@ exclude:
   - .idea
   - .git
   - .ipynb_checkpoints
+  
