@@ -1,7 +1,8 @@
-import logging
+import sys
 import os
 import subprocess
-import sys
+import shutil
+import logging
 
 
 def setup_torch_multiprocessing():
@@ -77,12 +78,46 @@ def check_inputs(train_mode, config, pipeline):
                 """.format(solution_path))
 
 
-def process_config(solution_config, global_config, sub_problem):
-    config = solution_config
-    experimet_dir = global_config['exp_root']
-    if not experimet_dir.endswith(sub_problem):
-        config = eval(str(config).replace(experimet_dir, os.path.join(experimet_dir, sub_problem)))
+def process_config(config, sub_problem):
+    experiment_dir = config['global']['cache_dirpath']['exp_root']
+    if not experiment_dir.endswith(sub_problem):
+        config = eval(str(config).replace(experiment_dir, os.path.join(experiment_dir, sub_problem)))
     return config
+
+
+def submit_setup(config):
+    experiment_dir = config['global']['cache_dirpath']
+    submission_dir = os.path.join(experiment_dir, 'submit_solution')
+
+    create_clean_dir(submission_dir)
+    copytree(experiment_dir, submission_dir)
+    config = eval(str(config).replace(experiment_dir, submission_dir))
+    return config
+
+
+def submit_teardown(config):
+    experiment_dir = config['global']['cache_dirpath']
+
+    if os.path.exists(experiment_dir):
+        shutil.rmtree(experiment_dir)
+
+
+def create_clean_dir(dir_path):
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    else:
+        shutil.rmtree(dir_path)
+        os.makedirs(dir_path)
+
+
+def copytree(src, dst, symlinks=False, ignore=None):
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d, symlinks, ignore)
+        else:
+            shutil.copy2(s, d)
 
 
 SUBPROBLEM_INFERENCE = {'whales': {1: 'localization',

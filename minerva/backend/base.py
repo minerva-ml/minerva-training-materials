@@ -20,13 +20,11 @@ class Step:
         self.input_data = input_data
         self.adapter = adapter
 
+        if save_graph:
+            self._save_graph()
+
         self.cache_dirpath = cache_dirpath
         self._prep_cache(cache_dirpath, save_outputs)
-
-        if save_graph:
-            graph_filepath = os.path.join(self.cache_dirpath, '{}_graph.json'.format(self.name))
-            logger.info('Saving graph to {}'.format(graph_filepath))
-            joblib.dump(self.graph_info, graph_filepath)
 
     def _prep_cache(self, cache_dirpath, save_outputs):
         for dirname in ['transformers', 'outputs']:
@@ -43,6 +41,11 @@ class Step:
                                                               '{}_{}'.format(self.name, save_output))
         self.save_filepath_step_outputs = save_output_filenames
 
+    def _save_graph(self):
+        graph_filepath = os.path.join(self.cache_dirpath, '{}_graph.json'.format(self.name))
+        logger.info('Saving graph to {}'.format(graph_filepath))
+        joblib.dump(self.graph_info, graph_filepath)
+
     @property
     def named_steps(self):
         return {step.name: step for step in self.input_steps}
@@ -55,7 +58,11 @@ class Step:
         return os.path.exists(self.cache_filepath_step_transformer)
 
     @property
-    def _can_load(self):
+    def _can_load_fit_transform(self):
+        return self.is_cached
+
+    @property
+    def _can_load_transform(self):
         return self.is_cached
 
     def fit_transform(self, data):
@@ -75,7 +82,7 @@ class Step:
         return step_output_data
 
     def _cached_fit_transform(self, step_inputs):
-        if self._can_load:
+        if self._can_load_fit_transform:
             logger.info('step {} loading...'.format(self.name))
             self.transformer.load(self.cache_filepath_step_transformer)
             logger.info('step {} transforming...'.format(self.name))
@@ -99,7 +106,7 @@ class Step:
                 step_inputs[input_data_part] = data[input_data_part]
 
         for input_step in self.input_steps:
-            step_inputs[input_step.name] = input_step.fit_transform(data)
+            step_inputs[input_step.name] = input_step.transform(data)
 
         if self.adapter:
             step_inputs = self.adapt(step_inputs)
@@ -109,13 +116,13 @@ class Step:
         return step_output_data
 
     def _cached_transform(self, step_inputs):
-        if self._can_load:
+        if self._can_load_transform:
             logger.info('step {} loading...'.format(self.name))
             self.transformer.load(self.cache_filepath_step_transformer)
             logger.info('step {} transforming...'.format(self.name))
             step_output_data = self.transformer.transform(**step_inputs)
         else:
-            raise ValueError('No transformer cached {}'.format(self.name))
+            raise ValueError('No transformer cached {} in {}'.format(self.name, self.cache_filepath_step_transformer))
         return step_output_data
 
     def adapt(self, step_inputs):
@@ -181,6 +188,7 @@ class Step:
 class SubstitutableStep(Step):
     def __init__(self, is_substituted=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.is_substituted = is_substituted
 
     @property
@@ -188,8 +196,12 @@ class SubstitutableStep(Step):
         return any(input_step.is_substituted for input_step in self.input_steps)
 
     @property
-    def _can_load(self):
-        return self.is_cached and not self.input_step_is_substituted and not self.is_substituted
+    def _can_load_fit_transform(self):
+        return self.is_cached and not self.is_substituted and not self.input_step_is_substituted
+
+    @property
+    def _can_load_transform(self):
+        return self.is_cached
 
 
 class BaseTransformer:

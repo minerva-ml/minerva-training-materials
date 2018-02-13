@@ -1,7 +1,7 @@
 from keras import backend as K
 
-from minerva.utils import copy_resources, check_inputs
-from .config import SOLUTION_CONFIG, GLOBAL_CONFIG
+from minerva.utils import copy_resources, check_inputs, submit_setup, submit_teardown
+from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
 from .tasks import initialize_tasks
 from .registry import registered_tasks, registered_score
@@ -17,12 +17,10 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
         copy_resources()
 
     check_inputs(train_mode, SOLUTION_CONFIG, solution_pipeline)
-
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     if train_mode:
         trainer.train()
     _evaluate(trainer)
-
     K.clear_session()
 
 
@@ -31,15 +29,16 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
         copy_resources()
 
     check_inputs(train_mode=False, config=SOLUTION_CONFIG, pipeline=solution_pipeline)
-
-    trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
+    submit_config = submit_setup(SOLUTION_CONFIG)
+    trainer = Trainer(solution_pipeline, submit_config, dev_mode)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)
     new_trainer = task_handler.substitute(user_task_solution, user_config)
+
     new_trainer.train()
     _evaluate(new_trainer)
-
     K.clear_session()
+    submit_teardown(submit_config)
 
 
 def _fetch_task_solution(filepath):

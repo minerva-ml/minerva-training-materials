@@ -9,11 +9,6 @@ exp_root = config['parameters']['solution_dir']
 data_dir = config['parameters']['data_dir']
 os.makedirs(exp_root, exist_ok=True)
 
-# exp_name = 'exp_early'
-#
-# exp_start = datetime.now().strftime("%Y%m%d-%H%M%S")
-# exp_root = '/mnt/ml-team/minerva/cache/whales/experiments/{}'.format(exp_start + '_' + exp_name)
-# os.makedirs(exp_root, exist_ok=True)
 
 SHAPE_COLUMNS = ['height', 'width']
 LOCALIZER_TARGET_COLUMNS = ['bbox1_x', 'bbox1_y', 'bbox2_x', 'bbox2_y']
