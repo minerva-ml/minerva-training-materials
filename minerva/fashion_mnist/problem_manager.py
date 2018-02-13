@@ -17,12 +17,10 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
         copy_resources()
 
     check_inputs(train_mode, SOLUTION_CONFIG, solution_pipeline)
-
     trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
     if train_mode:
         trainer.train()
     _evaluate(trainer)
-
     K.clear_session()
 
 
@@ -31,9 +29,7 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
         copy_resources()
 
     check_inputs(train_mode=False, config=SOLUTION_CONFIG, pipeline=solution_pipeline)
-
     submit_config = submit_setup(SOLUTION_CONFIG)
-
     trainer = Trainer(solution_pipeline, submit_config, dev_mode)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)
@@ -41,11 +37,8 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
 
     new_trainer.train()
     _evaluate(new_trainer)
-
     K.clear_session()
-
     submit_teardown(submit_config)
-
 
 
 def _fetch_task_solution(filepath):
