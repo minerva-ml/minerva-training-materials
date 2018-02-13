@@ -193,7 +193,7 @@ class SubstitutableStep(Step):
 
     @property
     def input_step_is_substituted(self):
-        return any(step.is_substituted for step in self.input_steps)
+        return any(input_step.is_substituted for input_step in self.input_steps)
 
     @property
     def _can_load_fit_transform(self):
