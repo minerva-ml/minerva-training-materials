@@ -1,6 +1,6 @@
 import numpy as np
 
-from minerva.utils import copy_resources, handle_empty_solution_dir, handle_dry_train, process_config, submit_setup, submit_teardown
+from minerva.utils import copy_resources, check_inputs, process_config, submit_setup, submit_teardown
 from .config import SOLUTION_CONFIG
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
 from .tasks import initialize_tasks
@@ -22,8 +22,7 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
         copy_resources()
 
     pipeline = pipeline_dict[sub_problem]
-    handle_dry_train(train_mode, config, pipeline)
-    handle_empty_solution_dir(train_mode, config, pipeline)
+    check_inputs(train_mode, config, pipeline)
 
     trainer = Trainer(pipeline, config, dev_mode, cloud_mode, sub_problem)
 
@@ -39,7 +38,7 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
         copy_resources()
 
     pipeline = pipeline_dict[sub_problem]
-    handle_empty_solution_dir(train_mode=False, config=config, pipeline=pipeline)
+    check_inputs(train_mode=False, config=config, pipeline=pipeline)
 
     submit_config = submit_setup(config)
 
