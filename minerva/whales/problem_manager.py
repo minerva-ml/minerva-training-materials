@@ -1,6 +1,6 @@
 import numpy as np
 
-from minerva.utils import copy_resources, check_inputs, process_config, submit_setup, submit_teardown
+from minerva.utils import setup_cloud, check_inputs, process_config, submit_setup, submit_teardown
 from .config import SOLUTION_CONFIG
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
 from .tasks import initialize_tasks
@@ -16,10 +16,10 @@ pipeline_dict = {'localization': localization_pipeline,
 
 
 def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
-    config = process_config(SOLUTION_CONFIG, sub_problem)
-
     if cloud_mode:
-        copy_resources()
+        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
+    else:
+        config = process_config(SOLUTION_CONFIG, sub_problem)
 
     pipeline = pipeline_dict[sub_problem]
     check_inputs(train_mode, config, pipeline)
@@ -32,16 +32,15 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
 
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
-    config = process_config(SOLUTION_CONFIG, sub_problem)
-
     if cloud_mode:
-        copy_resources()
+        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
+    else:
+        config = process_config(SOLUTION_CONFIG, sub_problem)
 
     pipeline = pipeline_dict[sub_problem]
     check_inputs(train_mode=False, config=config, pipeline=pipeline)
 
     submit_config = submit_setup(config)
-
 
     trainer = Trainer(pipeline, submit_config, dev_mode, cloud_mode, sub_problem)
     user_task_solution, user_config = _fetch_task_solution(filepath)
@@ -51,7 +50,6 @@ def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
     _evaluate(new_trainer, sub_problem)
 
     submit_teardown(submit_config)
-
 
 
 def _fetch_task_solution(filepath):

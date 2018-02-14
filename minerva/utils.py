@@ -38,9 +38,28 @@ def get_logger():
     return logging.getLogger('minerva')
 
 
-def copy_resources():
-    cmd = 'cp -rf /public/minerva/resources /output'
-    subprocess.call(cmd, shell=True)
+def setup_cloud(config, sub_problem):
+    PUBLIC_RESOURCES_DIR = '/public/minerva/resources'
+    PUBLIC_OUTPUT_DIR = '/output'
+    experiment_dir = config['global']['cache_dirpath']
+
+    if experiment_dir.startswith(PUBLIC_RESOURCES_DIR) or experiment_dir == '':
+        cmd = 'cp -rf {}/* {}/'.format(PUBLIC_RESOURCES_DIR, PUBLIC_OUTPUT_DIR)
+        subprocess.call(cmd, shell=True)
+        config = eval(str(config).replace(PUBLIC_RESOURCES_DIR, PUBLIC_OUTPUT_DIR))
+    elif experiment_dir.startswith(PUBLIC_OUTPUT_DIR):
+        pass
+    else:
+        raise ValueError('Wrong solution_dir: {} for cloud mode. '
+                         'Choose either /public/minerva/resources... if you want to use our solution or /output... if your want to dry_train your solution from scratch'.format(
+            experiment_dir))
+
+    experiment_dir_ = config['global']['cache_dirpath']
+    if not experiment_dir_.endswith(sub_problem) and sub_problem is not None:
+        config = eval(str(config).replace(experiment_dir_, os.path.join(experiment_dir_, sub_problem)))
+
+    return config
+
 
 def check_inputs(train_mode, config, pipeline):
     solution_path = config['global']['cache_dirpath']

@@ -1,6 +1,6 @@
 from keras import backend as K
 
-from minerva.utils import copy_resources, check_inputs, submit_setup, submit_teardown
+from minerva.utils import setup_cloud, check_inputs, submit_setup, submit_teardown
 from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
 from .tasks import initialize_tasks
@@ -14,10 +14,12 @@ initialize_tasks()
 
 def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     if cloud_mode:
-        copy_resources()
+        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
+    else:
+        config = SOLUTION_CONFIG
 
-    check_inputs(train_mode, SOLUTION_CONFIG, solution_pipeline)
-    trainer = Trainer(solution_pipeline, SOLUTION_CONFIG, dev_mode)
+    check_inputs(train_mode, config, solution_pipeline)
+    trainer = Trainer(solution_pipeline, config, dev_mode)
     if train_mode:
         trainer.train()
     _evaluate(trainer)
@@ -26,10 +28,12 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
     if cloud_mode:
-        copy_resources()
+        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
+    else:
+        config = SOLUTION_CONFIG
 
-    check_inputs(train_mode=False, config=SOLUTION_CONFIG, pipeline=solution_pipeline)
-    submit_config = submit_setup(SOLUTION_CONFIG)
+    check_inputs(train_mode=False, config=config, pipeline=solution_pipeline)
+    submit_config = submit_setup(config)
     trainer = Trainer(solution_pipeline, submit_config, dev_mode)
     user_task_solution, user_config = _fetch_task_solution(filepath)
     task_handler = registered_tasks[task_nr](trainer)
