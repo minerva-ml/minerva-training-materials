@@ -5,7 +5,7 @@ click==6.7
 numpy==1.14.0
 matplotlib==2.1.1
 opencv_python==3.4.0.12
-neptune_cli==2.6.1
+neptune_cli
 imgaug==0.2.5
 ipython==6.2.1
 Pillow==5.0.0
