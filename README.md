@@ -5,7 +5,7 @@ Minerva is an educational project that lets you learn advanced data science on r
 
 # Getting started
 1. Follow the [Installation Guide](https://github.com/neptune-ml/minerva/wiki/Installation-Guide 'Minerva Wiki -> installation guide') for setup instructions.
-2. Familiarize yourself with our approach: check short [User Guide](https://github.com/neptune-ml/minerva/wiki/User-Guide 'Minerva Wiki -> User Guide') or go straight to the [Fashion MNIST problem](resources/fashion_mnist/tasks/hello-fashion_mnist.ipynb 'Fashion MNIST -> Welcome notebook') and start solving.
+2. Familiarize yourself with our approach: check [User Guide](https://github.com/neptune-ml/minerva/wiki/User-Guide 'Minerva Wiki -> User Guide') or go straight to the [Fashion MNIST problem](resources/fashion_mnist/tasks/hello-fashion_mnist.ipynb 'Fashion MNIST -> Welcome notebook') and start solving.
 3. When ready, go to [Right Whale Recognition problem](resources/whales/tasks/hello-whales.ipynb 'Right Whale Recognition -> Welcome notebook') to start working on complex problem.
 
 ---
@@ -22,8 +22,8 @@ Working on **tasks** that, if taken together, create solution to the **problem**
 
 | Problem        | Description   |
 | -------------- | ------------- |
-| [Fashion mnist](https://github.com/neptune-ml/minerva/blob/master/resources/fashion_mnist/problems/hello-fashion_mnist.ipynb)  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
-| [Whales](https://github.com/neptune-ml/minerva/blob/master/resources/whales/problems/hello-whales.ipynb)         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
+| [Fashion mnist](https://github.com/neptune-ml/minerva/blob/master/resources/fashion_mnist/tasks/hello-fashion_mnist.ipynb)  | Get started with Minerva by solving easy pipeline on nice dataset [fashion-mnist](https://github.com/zalandoresearch/fashion-mnist 'Fashion-MNIST dataset') |
+| [Whales](https://github.com/neptune-ml/minerva/blob/master/resources/whales/tasks/hello-whales.ipynb)         | Reproduce [Right Whale Recognition](https://www.kaggle.com/c/noaa-right-whale-recognition 'Right Whale Recognition') Kaggle winning solution! |
 | | *(more problems will be published in the future, so stay tuned)* |
 
 ## User support
