@@ -17,7 +17,7 @@ def action():
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
 def dry_train(problem, dev_mode, cloud_mode):
-    dry_run(problem, dev_mode, cloud_mode, train_mode=True)
+    dry_run(problem, train_mode=True, dev_mode=dev_mode, cloud_mode=cloud_mode)
 
 
 @action.command()
@@ -25,10 +25,10 @@ def dry_train(problem, dev_mode, cloud_mode):
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 @click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
 def dry_eval(problem, dev_mode, cloud_mode):
-    dry_run(problem, dev_mode, cloud_mode, train_mode=False)
+    dry_run(problem, train_mode=False, dev_mode=dev_mode, cloud_mode=cloud_mode)
 
 
-def dry_run(problem, dev_mode, cloud_mode, train_mode):
+def dry_run(problem, train_mode, dev_mode, cloud_mode, ):
     if problem == 'whales':
         setup_torch_multiprocessing()
 
