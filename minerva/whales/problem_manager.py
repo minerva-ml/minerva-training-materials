@@ -12,12 +12,12 @@ initialize_tasks()
 
 pipeline_dict = {'localization': localization_pipeline,
                  'alignment': alignment_pipeline,
-                 'classification': classification_pipeline}
+                'classification': classification_pipeline
+}
 
 
 def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     config = process_config(SOLUTION_CONFIG, sub_problem)
-
     if cloud_mode:
         copy_resources()
 

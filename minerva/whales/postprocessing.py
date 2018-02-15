@@ -9,7 +9,12 @@ class Adjuster(BaseTransformer):
         return self
 
     def transform(self, prediction_coordinates, crop_coordinates):
-        adjusted_coordinates = prediction_coordinates + crop_coordinates
+        adjusted_coordinates = np.zeros_like(prediction_coordinates)
+        adjusted_coordinates[:, 0] = prediction_coordinates[:, 0] + crop_coordinates[:, 0]
+        adjusted_coordinates[:, 1] = prediction_coordinates[:, 1] + crop_coordinates[:, 1]
+        adjusted_coordinates[:, 2] = prediction_coordinates[:, 2] + crop_coordinates[:, 0]
+        adjusted_coordinates[:, 3] = prediction_coordinates[:, 3] + crop_coordinates[:, 1]
+
         return {'prediction_coordinates': adjusted_coordinates.astype(np.uint64)}
 
     def load(self, filepath):
