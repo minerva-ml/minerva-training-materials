@@ -38,6 +38,21 @@ def get_logger():
     return logging.getLogger('minerva')
 
 
+def is_neptune_cloud():
+    PUBLIC_RESOURCES_DIR = '/public/minerva/resources'
+    return os.path.exist(PUBLIC_RESOURCES_DIR)
+
+
+def setup_env(config, sub_problem):
+    if is_neptune_cloud():
+        config = setup_cloud(config, sub_problem)
+        cloud_mode = True
+    else:
+        config = process_config(config, sub_problem)
+        cloud_mode = False
+    return config, cloud_mode
+
+
 def setup_cloud(config, sub_problem):
     PUBLIC_RESOURCES_DIR = '/public/minerva/resources'
     PUBLIC_OUTPUT_DIR = '/output'
@@ -98,9 +113,10 @@ def check_inputs(train_mode, config, pipeline):
 
 
 def process_config(config, sub_problem):
-    experiment_dir = config['global']['cache_dirpath']
-    if not experiment_dir.endswith(sub_problem):
-        config = eval(str(config).replace(experiment_dir, os.path.join(experiment_dir, sub_problem)))
+    if sub_problem is not None:
+        experiment_dir = config['global']['cache_dirpath']
+        if not experiment_dir.endswith(sub_problem):
+            config = eval(str(config).replace(experiment_dir, os.path.join(experiment_dir, sub_problem)))
     return config
 
 

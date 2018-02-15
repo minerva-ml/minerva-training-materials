@@ -1,6 +1,6 @@
 from keras import backend as K
 
-from minerva.utils import setup_cloud, check_inputs, submit_setup, submit_teardown
+from minerva.utils import setup_env, check_inputs, submit_setup, submit_teardown
 from .config import SOLUTION_CONFIG
 from .pipelines import solution_pipeline
 from .tasks import initialize_tasks
@@ -8,15 +8,11 @@ from .registry import registered_tasks, registered_score
 from .trainer import Trainer
 from ..backend.task_manager import TaskSolutionParser
 
-
 initialize_tasks()
 
 
-def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
-    if cloud_mode:
-        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
-    else:
-        config = SOLUTION_CONFIG
+def dry_run(sub_problem, train_mode, dev_mode):
+    config, _ = setup_env(SOLUTION_CONFIG, sub_problem)
 
     check_inputs(train_mode, config, solution_pipeline)
     trainer = Trainer(solution_pipeline, config, dev_mode)
@@ -26,11 +22,8 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     K.clear_session()
 
 
-def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
-    if cloud_mode:
-        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
-    else:
-        config = SOLUTION_CONFIG
+def submit_task(sub_problem, task_nr, filepath, dev_mode):
+    config, _ = setup_env(SOLUTION_CONFIG, sub_problem)
 
     check_inputs(train_mode=False, config=config, pipeline=solution_pipeline)
     submit_config = submit_setup(config)
