@@ -30,6 +30,7 @@ def get_classifier_target_column(y):
 
 
 def add_crop_to_validation(input_):
+
     """
     Note:
         input is a list by definition

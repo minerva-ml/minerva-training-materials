@@ -9,7 +9,7 @@ exp_root = config['parameters']['solution_dir']
 data_dir = config['parameters']['data_dir']
 os.makedirs(exp_root, exist_ok=True)
 
-
+IMAGE_COLUMNS = ['Image']
 SHAPE_COLUMNS = ['height', 'width']
 LOCALIZER_TARGET_COLUMNS = ['bbox1_x', 'bbox1_y', 'bbox2_x', 'bbox2_y']
 LOCALIZER_AUXILARY_COLUMNS = []

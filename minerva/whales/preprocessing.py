@@ -78,7 +78,7 @@ class TargetEncoderPandas(BaseTransformer):
         joblib.dump(self.cols_with_encoders, filepath)
 
 
-class DatasetBasic(Dataset):
+class MetaDatasetBasic(Dataset):
     def __init__(self, X, y, img_dirpath, augmentation, target_size, bins_nr):
         super().__init__()
         self.img_dirpath = img_dirpath
@@ -117,15 +117,14 @@ class DatasetBasic(Dataset):
         yi_tensors = torch.from_numpy(yi).type(torch.LongTensor)
         return Xi_tensor, yi_tensors
 
-
-class DatasetLocalizer(DatasetBasic):
+class DatasetLocalizer(MetaDatasetBasic):
     def __init__(self, X, y, img_dirpath, augmentation, target_size, bins_nr):
         super().__init__(X, y, img_dirpath, augmentation, target_size, bins_nr)
         self.preprocessing_function = localizer_preprocessing
         self.normalization_function = normalize_img
 
 
-class DatasetAligner(DatasetBasic):
+class DatasetAligner(MetaDatasetBasic):
     def __init__(self, X, y, crop_coordinates, img_dirpath, augmentation, target_size, bins_nr):
         super().__init__(X, y, img_dirpath, augmentation, target_size, bins_nr)
         self.crop_coordinates = crop_coordinates
@@ -149,7 +148,7 @@ class DatasetAligner(DatasetBasic):
         return Xi_tensor, yi_tensors
 
 
-class DatasetClassifier(DatasetBasic):
+class DatasetClassifier(MetaDatasetBasic):
     def __init__(self, X, y, aligner_coordinates, img_dirpath, augmentation, target_size, num_classes):
         super().__init__(X, y, img_dirpath, augmentation, target_size, num_classes)
         self.aligner_coordinates = aligner_coordinates
