@@ -1,6 +1,6 @@
 import numpy as np
 
-from minerva.utils import setup_cloud, check_inputs, process_config, submit_setup, submit_teardown
+from minerva.utils import setup_env, check_inputs, submit_setup, submit_teardown
 from .config import SOLUTION_CONFIG
 from .pipelines import localization_pipeline, alignment_pipeline, classification_pipeline
 from .tasks import initialize_tasks
@@ -15,11 +15,8 @@ pipeline_dict = {'localization': localization_pipeline,
                  'classification': classification_pipeline}
 
 
-def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
-    if cloud_mode:
-        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
-    else:
-        config = process_config(SOLUTION_CONFIG, sub_problem)
+def dry_run(sub_problem, train_mode, dev_mode):
+    config, cloud_mode = setup_env(SOLUTION_CONFIG, sub_problem)
 
     pipeline = pipeline_dict[sub_problem]
     check_inputs(train_mode, config, pipeline)
@@ -31,11 +28,8 @@ def dry_run(sub_problem, train_mode, dev_mode, cloud_mode):
     _evaluate(trainer, sub_problem)
 
 
-def submit_task(sub_problem, task_nr, filepath, dev_mode, cloud_mode):
-    if cloud_mode:
-        config = setup_cloud(SOLUTION_CONFIG, sub_problem)
-    else:
-        config = process_config(SOLUTION_CONFIG, sub_problem)
+def submit_task(sub_problem, task_nr, filepath, dev_mode):
+    config, cloud_mode = setup_env(SOLUTION_CONFIG, sub_problem)
 
     pipeline = pipeline_dict[sub_problem]
     check_inputs(train_mode=False, config=config, pipeline=pipeline)
