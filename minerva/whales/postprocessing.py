@@ -5,11 +5,30 @@ from ..backend.base import BaseTransformer
 
 
 class Adjuster(BaseTransformer):
+    def __init__(self, shape):
+        self.shape = shape
+
     def fit(self, prediction_coordinates, crop_coordinates):
         return self
 
     def transform(self, prediction_coordinates, crop_coordinates):
-        adjusted_coordinates = prediction_coordinates + crop_coordinates
+
+        box_h, box_w = self.shape
+        scale_factor_x = (crop_coordinates[:, 2] - crop_coordinates[:, 0]) / float(box_w)
+        scale_factor_y = (crop_coordinates[:, 3] - crop_coordinates[:, 1]) / float(box_h)
+
+        prediction_adjusted = np.zeros_like(prediction_coordinates)
+        prediction_adjusted[:, 0] = prediction_coordinates[:, 0] * scale_factor_x
+        prediction_adjusted[:, 1] = prediction_coordinates[:, 1] * scale_factor_y
+        prediction_adjusted[:, 2] = prediction_coordinates[:, 2] * scale_factor_x
+        prediction_adjusted[:, 3] = prediction_coordinates[:, 3] * scale_factor_y
+
+        adjusted_coordinates = np.zeros_like(prediction_adjusted)
+        adjusted_coordinates[:, 0] = prediction_adjusted[:, 0] + crop_coordinates[:, 0]
+        adjusted_coordinates[:, 1] = prediction_adjusted[:, 1] + crop_coordinates[:, 1]
+        adjusted_coordinates[:, 2] = prediction_adjusted[:, 2] + crop_coordinates[:, 0]
+        adjusted_coordinates[:, 3] = prediction_adjusted[:, 3] + crop_coordinates[:, 1]
+
         return {'prediction_coordinates': adjusted_coordinates.astype(np.uint64)}
 
     def load(self, filepath):

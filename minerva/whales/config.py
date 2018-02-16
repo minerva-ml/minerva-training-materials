@@ -9,7 +9,7 @@ exp_root = config['parameters']['solution_dir']
 data_dir = config['parameters']['data_dir']
 os.makedirs(exp_root, exist_ok=True)
 
-
+IMAGE_COLUMNS = ['Image']
 SHAPE_COLUMNS = ['height', 'width']
 LOCALIZER_TARGET_COLUMNS = ['bbox1_x', 'bbox1_y', 'bbox2_x', 'bbox2_y']
 LOCALIZER_AUXILARY_COLUMNS = []
@@ -153,7 +153,7 @@ SOLUTION_CONFIG = {
                                                                             },
                                                                  },
                                                 },
-                        'training_config': {'epochs': 1000},
+                        'training_config': {'epochs': 120},
                         'callbacks_config': {'model_checkpoint': {
                             'checkpoint_dir': os.path.join(exp_root, 'checkpoints', 'aligner_network'),
                             'epoch_every': 1
@@ -169,7 +169,7 @@ SOLUTION_CONFIG = {
                         },
     'aligner_unbinner': {'bins_nr': GLOBAL_CONFIG['aligner_bins'],
                          'shape': GLOBAL_CONFIG['img_H-W']},
-
+    'aligner_adjuster': {'shape': GLOBAL_CONFIG['img_H-W']},
     'classifier_encoder': {'encode': ['whaleID', 'callosity'],
                            'no_encode': [],
                            },

@@ -12,9 +12,9 @@ def score_model(model, loss_function, datagen):
         X, target = data
 
         if torch.cuda.is_available():
-            X = Variable(X).cuda()
+            X = Variable(X, volatile=True).cuda()
         else:
-            X = Variable(X)
+            X = Variable(X, volatile=True)
         output = model(X)
 
         output_full.extend(output.data.cpu())
@@ -53,9 +53,9 @@ def score_model_multi_output(model, loss_function, datagen):
         targets = targets.transpose(0, 1)
 
         if torch.cuda.is_available():
-            X, targets_var = Variable(X).cuda(), Variable(targets).cuda()
+            X, targets_var = Variable(X, volatile=True).cuda(), Variable(targets, volatile=True).cuda()
         else:
-            X, targets_var = Variable(X), Variable(targets)
+            X, targets_var = Variable(X, volatile=True), Variable(targets, volatile=True)
         outputs = model(X)
         batch_loss = loss_function(outputs, targets_var).data.cpu().numpy()[0]
         batch_acc = torch_acc_score_multi_output(outputs, targets)
@@ -78,9 +78,9 @@ def predict_on_batch_multi_output(model, datagen):
         X, targets = data
 
         if torch.cuda.is_available():
-            X = Variable(X).cuda()
+            X = Variable(X, volatile=True).cuda()
         else:
-            X = Variable(X)
+            X = Variable(X, volatile=True)
         break
 
     outputs = model(X)

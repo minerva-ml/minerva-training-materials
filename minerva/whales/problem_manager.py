@@ -12,7 +12,8 @@ initialize_tasks()
 
 pipeline_dict = {'localization': localization_pipeline,
                  'alignment': alignment_pipeline,
-                 'classification': classification_pipeline}
+                 'classification': classification_pipeline
+                 }
 
 
 def dry_run(sub_problem, train_mode, dev_mode):

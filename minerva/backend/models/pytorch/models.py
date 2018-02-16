@@ -88,9 +88,9 @@ class Model(BaseTransformer):
             X, target_tensor = data
 
             if torch.cuda.is_available():
-                X, target_var = Variable(X).cuda(), Variable(target_tensor).cuda()
+                X, target_var = Variable(X, volatile=True).cuda(), Variable(target_tensor, volatile=True).cuda()
             else:
-                X, target_var = Variable(X), Variable(target_tensor)
+                X, target_var = Variable(X, volatile=True), Variable(target_tensor, volatile=True)
             output = self.model(X)
             predictions.append(output.data.cpu().numpy())
 
@@ -155,9 +155,9 @@ class MultiOutputModel(Model):
             X, target = data
 
             if torch.cuda.is_available():
-                X = Variable(X).cuda()
+                X = Variable(X, volatile=True).cuda()
             else:
-                X = Variable(X)
+                X = Variable(X, volatile=True)
 
             batch_outputs = self.model.forward_target(X)
             for i, batch_output in enumerate(batch_outputs):

@@ -1,5 +1,4 @@
 from .models import SimpleLocalizer, SimpleAligner, SimpleClassifier
-
 from .postprocessing import ProbabilityCalibration, UnBinner, Adjuster
 from .preprocessing import TargetEncoderPandas, DataLoaderLocalizer, DataLoaderAligner, DataLoaderClassifier
 from .utils import get_crop_coordinates, add_crop_to_validation, get_align_coordinates, add_alignment_to_validation, \
@@ -65,7 +64,7 @@ def alignment_pipeline(config):
                                  input_data=['unbinner_input'],
                                  cache_dirpath=config['global']['cache_dirpath'])
     adjuster = SubstitutableStep(name='aligner_adjuster',
-                                 transformer=Adjuster(),
+                                 transformer=Adjuster(**config['aligner_adjuster']),
                                  input_steps=[unbinner],
                                  input_data=['aligner_input'],
                                  adapter={'crop_coordinates': ([('aligner_input', 'X')],
@@ -117,7 +116,7 @@ def classification_pipeline(config):
                                          input_steps=[network],
                                          adapter={
                                              'prediction_probability': (
-                                             [('classifier_network', 'prediction_probability')], exp_transform),
+                                                 [('classifier_network', 'prediction_probability')], exp_transform),
                                          },
                                          cache_dirpath=config['global']['cache_dirpath'])
 

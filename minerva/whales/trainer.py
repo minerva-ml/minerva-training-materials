@@ -70,7 +70,6 @@ class Trainer(BasicTrainer):
                                            })
         y_pred = outputs['y_pred']
         y_true = outputs['y_true']
-
         score = SCORE_FUNCTIONS[self.sub_problem](y_true, y_pred)
         return score
 
