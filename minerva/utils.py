@@ -70,8 +70,9 @@ def setup_cloud(config, sub_problem):
             experiment_dir))
 
     experiment_dir_ = config['global']['cache_dirpath']
-    if not experiment_dir_.endswith(sub_problem) and sub_problem is not None:
-        config = eval(str(config).replace(experiment_dir_, os.path.join(experiment_dir_, sub_problem)))
+    if sub_problem is not None:
+        if not experiment_dir_.endswith(sub_problem):
+            config = eval(str(config).replace(experiment_dir_, os.path.join(experiment_dir_, sub_problem)))
 
     return config
 

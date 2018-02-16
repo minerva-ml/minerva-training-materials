@@ -12,10 +12,11 @@ initialize_tasks()
 
 
 def dry_run(sub_problem, train_mode, dev_mode):
-    config, _ = setup_env(SOLUTION_CONFIG, sub_problem)
+    config, cloud_mode = setup_env(SOLUTION_CONFIG, sub_problem)
 
     check_inputs(train_mode, config, solution_pipeline)
     trainer = Trainer(solution_pipeline, config, dev_mode)
+
     if train_mode:
         trainer.train()
     _evaluate(trainer)
