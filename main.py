@@ -61,7 +61,7 @@ def submit(problem, task_nr, filepath, dev_mode):
         task_subproblem = None
 
     pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
-    pm.submit_task(task_subproblem, task_nr, filepath, dev_mode, cloud_mode)
+    pm.submit_task(task_subproblem, task_nr, filepath, dev_mode)
 
 
 if __name__ == "__main__":
