@@ -40,7 +40,7 @@ def get_logger():
 
 def is_neptune_cloud():
     PUBLIC_RESOURCES_DIR = '/public/minerva/resources'
-    return os.path.exist(PUBLIC_RESOURCES_DIR)
+    return os.path.exists(PUBLIC_RESOURCES_DIR)
 
 
 def setup_env(config, sub_problem):
