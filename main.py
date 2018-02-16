@@ -34,7 +34,7 @@ def dry_run(problem, dev_mode, cloud_mode, train_mode):
 
     subproblems = SUBPROBLEM_INFERENCE.get(problem)
     if subproblems:
-        for sub_problem in ['alignment']:#list(set(subproblems.values())):
+        for sub_problem in list(set(subproblems.values())):
             pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
             logging.info('running: {0}'.format(sub_problem))
             pm.dry_run(sub_problem, train_mode, dev_mode, cloud_mode)
