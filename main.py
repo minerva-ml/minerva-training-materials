@@ -15,20 +15,18 @@ def action():
 @action.command()
 @click.option('-p', '--problem', help='problem to choose', required=True)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
-@click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
-def dry_train(problem, dev_mode, cloud_mode):
-    dry_run(problem, dev_mode, cloud_mode, train_mode=True)
+def dry_train(problem, dev_mode):
+    dry_run(problem, train_mode=True, dev_mode=dev_mode)
 
 
 @action.command()
 @click.option('-p', '--problem', help='problem to choose', required=True)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
-@click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
-def dry_eval(problem, dev_mode, cloud_mode):
-    dry_run(problem, dev_mode, cloud_mode, train_mode=False)
+def dry_eval(problem, dev_mode):
+    dry_run(problem, train_mode=False, dev_mode=dev_mode)
 
 
-def dry_run(problem, dev_mode, cloud_mode, train_mode):
+def dry_run(problem, train_mode, dev_mode):
     if problem == 'whales':
         setup_torch_multiprocessing()
 
@@ -37,11 +35,11 @@ def dry_run(problem, dev_mode, cloud_mode, train_mode):
         for sub_problem in list(set(subproblems.values())):
             pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
             logging.info('running: {0}'.format(sub_problem))
-            pm.dry_run(sub_problem, train_mode, dev_mode, cloud_mode)
+            pm.dry_run(sub_problem, train_mode, dev_mode)
     else:
         pm = importlib.import_module('minerva.{}.problem_manager'.format(problem))
         sub_problem = None
-        pm.dry_run(sub_problem, train_mode, dev_mode, cloud_mode)
+        pm.dry_run(sub_problem, train_mode, dev_mode)
 
 
 @action.command()
@@ -49,8 +47,7 @@ def dry_run(problem, dev_mode, cloud_mode, train_mode):
 @click.option('-t', '--task_nr', help='task number', required=True)
 @click.option('-d', '--dev_mode', help='dev mode on', is_flag=True)
 @click.option('-f', '--filepath', type=str, help='filepath_to_solution')
-@click.option('-c', '--cloud_mode', help='cloud mode on', is_flag=True)
-def submit(problem, task_nr, filepath, dev_mode, cloud_mode):
+def submit(problem, task_nr, filepath, dev_mode):
     if filepath is None:
         filepath = 'resources/{}/tasks/task{}.ipynb'.format(problem, task_nr)
     if problem == 'whales':
