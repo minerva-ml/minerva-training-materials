@@ -8,7 +8,7 @@ name: minerva
 parameters:
 # Local setup
   data_dir:     resources/whales/data
-  solution_dir: resources/whales/solution
+  solution_dir: resources/fashion_mnist/solution
 
 # Cloud setup
 #  data_dir:     /public/whales
