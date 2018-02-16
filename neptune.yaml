@@ -9,7 +9,7 @@ parameters:
 #  solution_dir:  output/path_to_your_solution # for instance /output/resources/whales/solution/localization
 
   data_dir: /mnt/ml-team/minerva/whales/data
-  solution_dir: /mnt/ml-team/minerva/cache_kuba/whales/solution
+  solution_dir: resources/whales/solution
 
   # Cloud setup
 #  data_dir: /public/whales # for instance /public/whales

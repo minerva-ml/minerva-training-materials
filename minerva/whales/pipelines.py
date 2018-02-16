@@ -64,7 +64,7 @@ def alignment_pipeline(config):
                                  input_data=['unbinner_input'],
                                  cache_dirpath=config['global']['cache_dirpath'])
     adjuster = SubstitutableStep(name='aligner_adjuster',
-                                 transformer=Adjuster(),
+                                 transformer=Adjuster(**config['aligner_adjuster']),
                                  input_steps=[unbinner],
                                  input_data=['aligner_input'],
                                  adapter={'crop_coordinates': ([('aligner_input', 'X')],

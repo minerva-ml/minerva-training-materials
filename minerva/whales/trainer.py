@@ -50,8 +50,6 @@ class Trainer(BasicTrainer):
                                      })
 
     def _evaluate(self, X, y):
-        from sklearn.externals import joblib
-        joblib.dump(X,'/mnt/ml-team/minerva/debug/X.pkl')
         outputs = self.pipeline.transform({'unbinner_input': {'original_shapes': X[SHAPE_COLUMNS],
                                                               },
                                            'localizer_input': {'X': X,
@@ -72,8 +70,6 @@ class Trainer(BasicTrainer):
                                            })
         y_pred = outputs['y_pred']
         y_true = outputs['y_true']
-        from sklearn.externals import joblib
-        joblib.dump((y_true,y_pred),'/mnt/ml-team/minerva/debug/true_pred_aligner.pkl')
         score = SCORE_FUNCTIONS[self.sub_problem](y_true, y_pred)
         return score
 

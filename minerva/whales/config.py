@@ -153,7 +153,7 @@ SOLUTION_CONFIG = {
                                                                             },
                                                                  },
                                                 },
-                        'training_config': {'epochs': 1000},
+                        'training_config': {'epochs': 120},
                         'callbacks_config': {'model_checkpoint': {
                             'checkpoint_dir': os.path.join(exp_root, 'checkpoints', 'aligner_network'),
                             'epoch_every': 1
@@ -169,7 +169,7 @@ SOLUTION_CONFIG = {
                         },
     'aligner_unbinner': {'bins_nr': GLOBAL_CONFIG['aligner_bins'],
                          'shape': GLOBAL_CONFIG['img_H-W']},
-
+    'aligner_adjuster': {'shape': GLOBAL_CONFIG['img_H-W']},
     'classifier_encoder': {'encode': ['whaleID', 'callosity'],
                            'no_encode': [],
                            },
