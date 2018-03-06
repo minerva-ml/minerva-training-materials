@@ -1,8 +1,9 @@
-import sys
-import os
-import subprocess
-import shutil
 import logging
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
 
 
 def setup_torch_multiprocessing():
@@ -36,6 +37,11 @@ def init_logger():
 
 def get_logger():
     return logging.getLogger('minerva')
+
+
+def get_available_problems():
+    resources_dir = Path(__file__).parent.parent / 'resources'
+    return [d.name for d in resources_dir.glob('*')]
 
 
 def is_neptune_cloud():
