@@ -1,5 +1,5 @@
-import os
 from math import ceil
+from pathlib import Path
 
 import imgaug as ia
 import numpy as np
@@ -14,6 +14,14 @@ from torch.utils.data import Dataset, DataLoader
 from .config import ALIGNER_AUXILARY_COLUMNS
 from .utils import CropKeypoints, AlignKeypoints
 from ..backend.base import BaseTransformer
+
+"""
+install libturbojpeg. on Ubuntu 16.04 use:
+sudo apt install libturbojpeg
+"""
+from turbojpeg import TurboJPEG
+
+_TURBO_DECODER = TurboJPEG(lib_path='/usr/lib/x86_64-linux-gnu/libturbojpeg.so.0')
 
 
 class TargetEncoderPandas(BaseTransformer):
@@ -96,32 +104,50 @@ class MetaDatasetBasic(Dataset):
         self.preprocessing_function = None
         self.normalization_function = None
 
-    def load_image(self, img_name):
-        img_filepath = os.path.join(self.img_dirpath, img_name)
-        return Image.open(img_filepath, 'r')
+    def load_image(self, img_name, max_scale=8):
+        import turbojpeg
+        img_path = Path(self.img_dirpath) / img_name
+        img = Image.open(img_path.as_posix())
+
+        scale = 0.5
+        found = False
+        while not found and scale < max_scale:
+            scale = int(scale * 2)
+            for img_dim, target_dim in zip(img.size, self.target_size):
+                found |= img_dim / scale <= target_dim * 3
+
+        with img_path.open('rb') as img_file:
+            return _TURBO_DECODER.decode(img_file.read(), scaling_factor=(1, scale),
+                                         pixel_format=turbojpeg.TJPF_RGB)
 
     def __len__(self):
         return self.X.shape[0]
 
     def __getitem__(self, index):
-        img_name = self.X['Image'].iloc[index]
-        yi = self.y.iloc[index]
+        raise NotImplementedError()
 
-        Xi_img = self.load_image(img_name)
-        Xi = np.asarray(Xi_img)
-
-        Xi, yi = self.preprocessing_function(Xi, yi, self.augmentation, self.target_size, self.bins_nr)
-        Xi = self.normalization_function(Xi)
-
-        Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1).type(torch.FloatTensor)
-        yi_tensors = torch.from_numpy(yi).type(torch.LongTensor)
-        return Xi_tensor, yi_tensors
 
 class DatasetLocalizer(MetaDatasetBasic):
     def __init__(self, X, y, img_dirpath, augmentation, target_size, bins_nr):
         super().__init__(X, y, img_dirpath, augmentation, target_size, bins_nr)
         self.preprocessing_function = localizer_preprocessing
         self.normalization_function = normalize_img
+
+    def __getitem__(self, index):
+        img_name = self.X['Image'].iloc[index]
+        org_shape = self.X[['height', 'width']].iloc[index].tolist()
+        yi = self.y.iloc[index]
+
+        Xi_img = self.load_image(img_name)
+        Xi = np.asarray(Xi_img)
+
+        Xi, yi = self.preprocessing_function(Xi, yi, self.augmentation, self.target_size, self.bins_nr,
+                                             org_shape)
+        Xi = self.normalization_function(Xi)
+
+        Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1).type(torch.FloatTensor)
+        yi_tensors = torch.from_numpy(yi).type(torch.LongTensor)
+        return Xi_tensor, yi_tensors
 
 
 class DatasetAligner(MetaDatasetBasic):
@@ -133,14 +159,15 @@ class DatasetAligner(MetaDatasetBasic):
 
     def __getitem__(self, index):
         img_name = self.X['Image'].iloc[index]
-        crop_coordinatesi = self.crop_coordinates[index]
+        org_shape = self.X[['height', 'width']].iloc[index].tolist()
+        crop_coordinates = self.crop_coordinates[index]
         yi = self.y.iloc[index]
 
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, crop_coordinatesi, self.augmentation, self.target_size,
-                                             self.bins_nr)
+        Xi, yi = self.preprocessing_function(Xi, yi, crop_coordinates, self.augmentation, self.target_size,
+                                             self.bins_nr, org_shape)
         Xi = self.normalization_function(Xi)
 
         Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1).type(torch.FloatTensor)
@@ -158,13 +185,15 @@ class DatasetClassifier(MetaDatasetBasic):
 
     def __getitem__(self, index):
         img_name = self.X['Image'].iloc[index]
-        aligner_coordinatesi = self.aligner_coordinates[index]
+        org_shape = self.X[['height', 'width']].iloc[index].tolist()
+        aligner_coordinates = self.aligner_coordinates[index]
         yi = self.y.iloc[index]
 
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, aligner_coordinatesi, self.augmentation, self.target_size)
+        Xi, yi = self.preprocessing_function(Xi, yi, aligner_coordinates, self.augmentation, self.target_size,
+                                             org_shape)
         Xi = self.normalization_function(Xi)
 
         Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1)
@@ -298,19 +327,18 @@ class DataLoaderClassifier(DataLoaderBasic):
         return datagen, steps
 
 
-def localizer_preprocessing(img, target, augmentation, target_size, bins_nr):
-    height, width = target_size
+def localizer_preprocessing(img, target, augmentation, target_size, bins_nr, org_shape):
+    final_height, finale_width = target_size
+    img_height, img_width = img.shape[:-1]
 
-    scale = iaa.Scale({"height": height, "width": width}).to_deterministic()
-    augmenter = iaa.Sequential([iaa.Affine(rotate=(-10, 10),
-                                           scale=(1 / 1.2, 1.2)),
-                                #  KirzhevskyColorPerturbation
-                                ]).to_deterministic()
+    load_scale = iaa.Scale({"height": img_height, "width": img_width}).to_deterministic()
+    final_scale = iaa.Scale({"height": final_height, "width": finale_width}).to_deterministic()
+    augmenter = iaa.Affine(rotate=(-10, 10), scale=(1 / 1.2, 1.2)).to_deterministic()
 
     if augmentation:
-        transformations = [augmenter, scale]
+        transformations = [load_scale, augmenter, final_scale]
     else:
-        transformations = [scale]
+        transformations = [final_scale]
     transformer = iaa.Sequential(transformations).to_deterministic()
 
     aug_X = transformer.augment_image(img)
@@ -318,23 +346,30 @@ def localizer_preprocessing(img, target, augmentation, target_size, bins_nr):
     keypoints = ia.KeypointsOnImage([
         ia.Keypoint(x=int(target.bbox1_x), y=int(target.bbox1_y)),
         ia.Keypoint(x=int(target.bbox2_x), y=int(target.bbox2_y))],
-        shape=img.shape)
-    aug_points = transformer.augment_keypoints([keypoints])
-    aug_points_formatted = np.reshape(aug_points[0].get_coords_array(), -1).astype(np.float)
-    aug_points_binned = bin_quantizer(aug_points_formatted, (height, width), bins_nr)
+        shape=org_shape)
+    aug_points = transformer.augment_keypoints([keypoints])[0]
+    aug_points_formatted = np.reshape(aug_points.get_coords_array(), -1).astype(np.float)
+    aug_points_binned = bin_quantizer(aug_points_formatted, target_size, bins_nr)
 
     return aug_X, aug_points_binned
 
 
-def aligner_preprocessing(img, target, crop_coordinates, augmentation, target_size, bins_nr):
-    height, width = target_size
+def aligner_preprocessing(img, target, crop_coordinates, augmentation, target_size, bins_nr, org_shape):
+    img_height, img_width = img.shape[:-1]
+    final_height, final_width = target_size
 
     keypoints = ia.KeypointsOnImage([ia.Keypoint(x=int(target.bonnet_x), y=int(target.bonnet_y)),
-                                     ia.Keypoint(x=int(target.blowhead_x), y=int(target.blowhead_y))
-                                     ], shape=img.shape)
+                                     ia.Keypoint(x=int(target.blowhead_x), y=int(target.blowhead_y))],
+                                    shape=org_shape)
+    crop_coordinates = ia.KeypointsOnImage([ia.Keypoint(x=crop_coordinates[0], y=crop_coordinates[1]),
+                                            ia.Keypoint(x=crop_coordinates[2], y=crop_coordinates[3])],
+                                           shape=org_shape)
+    # scale crop coordinates to current image shape
+    load_scale = iaa.Scale({'height': img_height, 'width': img_width}, deterministic=True)
+    crop_coordinates = load_scale.augment_keypoints([crop_coordinates])[0]
+    crop_coordinates = crop_coordinates.get_coords_array().flatten()
 
     crop = CropKeypoints(crop_coordinates).to_deterministic()
-    scale = iaa.Scale({"height": height, "width": width}).to_deterministic()
     augmenter = iaa.Sequential([iaa.Fliplr(0.5),
                                 iaa.Flipud(0.5),
                                 iaa.Affine(
@@ -342,52 +377,56 @@ def aligner_preprocessing(img, target, crop_coordinates, augmentation, target_si
                                     rotate=(-180, 180),
                                     scale=(1.0, 1.5)),
                                 ]).to_deterministic()
+    final_scale = iaa.Scale({"height": final_height, "width": final_width}).to_deterministic()
 
     if augmentation:
-        transformations = [crop, augmenter, scale]
+        transformations = [load_scale, crop, augmenter, final_scale]
     else:
-        transformations = [crop, scale]
+        transformations = [load_scale, crop, final_scale]
 
     transformer = iaa.Sequential(transformations).to_deterministic()
 
     aug_X = transformer.augment_image(img)
+    aug_points = transformer.augment_keypoints([keypoints])[0]
 
-    aug_points = transformer.augment_keypoints([keypoints])
-    aug_points_formatted = np.reshape(aug_points[0].get_coords_array(), -1).astype(np.float)
-    aug_points_binned = bin_quantizer(aug_points_formatted, (height, width), bins_nr)
-
+    # bin key-points
+    aug_points_formatted = np.reshape(aug_points.get_coords_array(), -1).astype(np.float)
+    aug_points_binned = bin_quantizer(aug_points_formatted, target_size, bins_nr)
     aug_target_binned = np.hstack([aug_points_binned, target[ALIGNER_AUXILARY_COLUMNS].values])
     return aug_X, aug_target_binned
 
 
-def classifier_preprocessing(img, target, aligner_coordinates, augmentation, target_size):
-    height, width = target_size
+def classifier_preprocessing(img, target, aligner_coordinates, augmentation, target_size, org_shape):
+    img_height, img_width = img.shape[:-1]
+    final_height, final_width = target_size
 
-    align = AlignKeypoints(aligner_coordinates, (height, width)).to_deterministic()
-    scale = iaa.Scale({"height": height, "width": width}).to_deterministic()
+    aligner_coordinates = ia.KeypointsOnImage([ia.Keypoint(x=aligner_coordinates[0], y=aligner_coordinates[1]),
+                                               ia.Keypoint(x=aligner_coordinates[2], y=aligner_coordinates[3])],
+                                              shape=org_shape)
+    # scale aligner coordinates to current image shape
+    load_scale = iaa.Scale({'height': img_height, 'width': img_width}, deterministic=True)
+    aligner_coordinates = load_scale.augment_keypoints([aligner_coordinates])[0]
+    aligner_coordinates = aligner_coordinates.get_coords_array().flatten()
 
+    align = AlignKeypoints(aligner_coordinates, target_size).to_deterministic()
     augmenter = iaa.Sequential([iaa.Affine(translate_px={"x": (-4, 4), "y": (-4, 4)},
                                            rotate=(-4, 4),
                                            scale=(1.0, 1.3)),
                                 iaa.Flipud(0.5),
                                 iaa.Fliplr(0.5),
                                 ]).to_deterministic()
+    final_scale = iaa.Scale({"height": final_height, "width": final_width}).to_deterministic()
+
     if augmentation:
-        transformations = [align, augmenter, scale]
+        transformations = [align, augmenter, final_scale]
     else:
-        transformations = [align, scale]
+        transformations = [align, final_scale]
 
     transformer = iaa.Sequential(transformations).to_deterministic()
 
     aug_X = transformer.augment_image(img)
-
     target_np = target.values.astype(np.int64)
     return aug_X, target_np
-
-
-def rescale_img(img):
-    img = img.astype(np.float64) / 255.
-    return img
 
 
 def normalize_img(img):
