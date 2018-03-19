@@ -135,14 +135,14 @@ class DatasetLocalizer(MetaDatasetBasic):
 
     def __getitem__(self, index):
         img_name = self.X['Image'].iloc[index]
-        org_shape = self.X[['height', 'width']].iloc[index].tolist()
+        org_size = self.X[['height', 'width']].iloc[index].tolist()
         yi = self.y.iloc[index]
 
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, self.augmentation, self.target_size, self.bins_nr,
-                                             org_shape)
+        Xi, yi = self.preprocessing_function(Xi, yi, self.augmentation, org_size=org_size,
+                                             target_size=self.target_size, bins_nr=self.bins_nr)
         Xi = self.normalization_function(Xi)
 
         Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1).type(torch.FloatTensor)
@@ -159,15 +159,15 @@ class DatasetAligner(MetaDatasetBasic):
 
     def __getitem__(self, index):
         img_name = self.X['Image'].iloc[index]
-        org_shape = self.X[['height', 'width']].iloc[index].tolist()
+        org_size = self.X[['height', 'width']].iloc[index].tolist()
         crop_coordinates = self.crop_coordinates[index]
         yi = self.y.iloc[index]
 
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, crop_coordinates, self.augmentation, self.target_size,
-                                             self.bins_nr, org_shape)
+        Xi, yi = self.preprocessing_function(Xi, yi, crop_coordinates, self.augmentation, org_size=org_size,
+                                             target_size=self.target_size, bins_nr=self.bins_nr)
         Xi = self.normalization_function(Xi)
 
         Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1).type(torch.FloatTensor)
@@ -192,8 +192,8 @@ class DatasetClassifier(MetaDatasetBasic):
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, aligner_coordinates, self.augmentation, self.target_size,
-                                             org_shape)
+        Xi, yi = self.preprocessing_function(Xi, yi, aligner_coordinates, self.augmentation, org_size=org_shape,
+                                             target_size=self.target_size)
         Xi = self.normalization_function(Xi)
 
         Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1)
@@ -327,7 +327,7 @@ class DataLoaderClassifier(DataLoaderBasic):
         return datagen, steps
 
 
-def localizer_preprocessing(img, target, augmentation, target_size, bins_nr, org_shape):
+def localizer_preprocessing(img, target, augmentation, *, org_size, target_size, bins_nr):
     final_height, finale_width = target_size
     img_height, img_width = img.shape[:-1]
 
@@ -346,7 +346,7 @@ def localizer_preprocessing(img, target, augmentation, target_size, bins_nr, org
     keypoints = ia.KeypointsOnImage([
         ia.Keypoint(x=int(target.bbox1_x), y=int(target.bbox1_y)),
         ia.Keypoint(x=int(target.bbox2_x), y=int(target.bbox2_y))],
-        shape=org_shape)
+        shape=org_size)
     aug_points = transformer.augment_keypoints([keypoints])[0]
     aug_points_formatted = np.reshape(aug_points.get_coords_array(), -1).astype(np.float)
     aug_points_binned = bin_quantizer(aug_points_formatted, target_size, bins_nr)
@@ -354,16 +354,16 @@ def localizer_preprocessing(img, target, augmentation, target_size, bins_nr, org
     return aug_X, aug_points_binned
 
 
-def aligner_preprocessing(img, target, crop_coordinates, augmentation, target_size, bins_nr, org_shape):
+def aligner_preprocessing(img, target, crop_coordinates, augmentation, *, org_size, target_size, bins_nr):
     img_height, img_width = img.shape[:-1]
     final_height, final_width = target_size
 
     keypoints = ia.KeypointsOnImage([ia.Keypoint(x=int(target.bonnet_x), y=int(target.bonnet_y)),
                                      ia.Keypoint(x=int(target.blowhead_x), y=int(target.blowhead_y))],
-                                    shape=org_shape)
+                                    shape=org_size)
     crop_coordinates = ia.KeypointsOnImage([ia.Keypoint(x=crop_coordinates[0], y=crop_coordinates[1]),
                                             ia.Keypoint(x=crop_coordinates[2], y=crop_coordinates[3])],
-                                           shape=org_shape)
+                                           shape=org_size)
     # scale crop coordinates to current image shape
     load_scale = iaa.Scale({'height': img_height, 'width': img_width}, deterministic=True)
     crop_coordinates = load_scale.augment_keypoints([crop_coordinates])[0]
@@ -396,13 +396,13 @@ def aligner_preprocessing(img, target, crop_coordinates, augmentation, target_si
     return aug_X, aug_target_binned
 
 
-def classifier_preprocessing(img, target, aligner_coordinates, augmentation, target_size, org_shape):
+def classifier_preprocessing(img, target, aligner_coordinates, augmentation, *, org_size, target_size):
     img_height, img_width = img.shape[:-1]
     final_height, final_width = target_size
 
     aligner_coordinates = ia.KeypointsOnImage([ia.Keypoint(x=aligner_coordinates[0], y=aligner_coordinates[1]),
                                                ia.Keypoint(x=aligner_coordinates[2], y=aligner_coordinates[3])],
-                                              shape=org_shape)
+                                              shape=org_size)
     # scale aligner coordinates to current image shape
     load_scale = iaa.Scale({'height': img_height, 'width': img_width}, deterministic=True)
     aligner_coordinates = load_scale.augment_keypoints([aligner_coordinates])[0]
