@@ -461,7 +461,7 @@ def build_callbacks_localizer(callbacks_config):
     lr_scheduler = ExponentialLRScheduler(**callbacks_config['lr_scheduler'])
     training_monitor = TrainingMonitor(**callbacks_config['training_monitor'])
     validation_monitor = ValidationMonitor(**callbacks_config['validation_monitor'])
-    neptune_monitor = NeptuneMonitorLocalizer(**callbacks_config['neptune_monitor'])
+    neptune_monitor = NeptuneMonitorLocalizer(name='localizer', **callbacks_config['neptune_monitor'])
     plot_bounding_box = PlotBoundingBoxPredictions(**callbacks_config['bounding_box_predictions'])
 
     return CallbackList(
@@ -475,7 +475,7 @@ def build_callbacks_aligner(callbacks_config):
     lr_scheduler = ExponentialLRScheduler(**callbacks_config['lr_scheduler'])
     training_monitor = TrainingMonitor(**callbacks_config['training_monitor'])
     validation_monitor = ValidationMonitor(**callbacks_config['validation_monitor'])
-    neptune_monitor = NeptuneMonitorKeypoints(**callbacks_config['neptune_monitor'])
+    neptune_monitor = NeptuneMonitorKeypoints(name='aligner', **callbacks_config['neptune_monitor'])
 
     return CallbackList(
         callbacks=[experiment_timing, model_checkpoints, lr_scheduler, training_monitor, validation_monitor,
@@ -488,7 +488,7 @@ def build_callbacks_classifier(callbacks_config):
     lr_scheduler = ExponentialLRScheduler(**callbacks_config['lr_scheduler'])
     validation_monitor = ValidationMonitor(**callbacks_config['validation_monitor'])
     training_monitor = TrainingMonitor(**callbacks_config['training_monitor'])
-    neptune_monitor = NeptuneMonitor()
+    neptune_monitor = NeptuneMonitor(name='classifier')
 
     return CallbackList(
         callbacks=[experiment_timing, model_checkpoints, lr_scheduler, training_monitor, validation_monitor,
