@@ -5,23 +5,15 @@ import imgaug as ia
 import numpy as np
 import pandas as pd
 import torch
-from PIL import Image
 from imgaug import augmenters as iaa
 from sklearn.externals import joblib
 from sklearn.preprocessing import LabelEncoder
 from torch.utils.data import Dataset, DataLoader
 
+from minerva.utils import decode_with_rescale
 from .config import ALIGNER_AUXILARY_COLUMNS
 from .utils import CropKeypoints, AlignKeypoints
 from ..backend.base import BaseTransformer
-
-"""
-install libturbojpeg. on Ubuntu 16.04 use:
-sudo apt install libturbojpeg
-"""
-from turbojpeg import TurboJPEG
-
-_TURBO_DECODER = TurboJPEG(lib_path='/usr/lib/x86_64-linux-gnu/libturbojpeg.so.0')
 
 
 class TargetEncoderPandas(BaseTransformer):
@@ -104,21 +96,11 @@ class MetaDatasetBasic(Dataset):
         self.preprocessing_function = None
         self.normalization_function = None
 
-    def load_image(self, img_name, max_scale=8):
-        import turbojpeg
+    def load_image(self, img_name, max_scaling_factor=8):
         img_path = Path(self.img_dirpath) / img_name
-        img = Image.open(img_path.as_posix())
-
-        scale = 0.5
-        found = False
-        while not found and scale < max_scale:
-            scale = int(scale * 2)
-            for img_dim, target_dim in zip(img.size, self.target_size):
-                found |= img_dim / scale <= target_dim * 3
-
-        with img_path.open('rb') as img_file:
-            return _TURBO_DECODER.decode(img_file.read(), scaling_factor=(1, scale),
-                                         pixel_format=turbojpeg.TJPF_RGB)
+        return decode_with_rescale(img_path,
+                                   minimum_shape=[d * 3 for d in self.target_size],
+                                   max_scaling_factor=max_scaling_factor)
 
     def __len__(self):
         return self.X.shape[0]
