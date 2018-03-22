@@ -115,7 +115,7 @@ def classification_pipeline(config):
                                          transformer=ProbabilityCalibration(**config['classifier_calibrator']),
                                          input_steps=[network],
                                          adapter={
-                                             'prediction_proba': (
+                                             'prediction_probability': (
                                                  [('classifier_network', 'prediction_probability')], exp_transform),
                                          },
                                          cache_dirpath=config['global']['cache_dirpath'])
