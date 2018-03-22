@@ -340,11 +340,9 @@ class NeptuneMonitor(Callback):
         self.epoch_acc_averager = Averager()
 
     def _get_channel_name(self, base_name):
-        channel_name = self._channel_names.get(base_name,
-                                               get_unique_channel_name(self.ctx, base_name, suffix=self.name))
         if base_name not in self._channel_names:
-            self._channel_names[base_name] = channel_name
-        return channel_name
+            self._channel_names[base_name] = get_unique_channel_name(self.ctx, base_name, suffix=self.name)
+        return self._channel_names[base_name]
 
     def on_train_begin(self, *args, **kwargs):
         self.epoch_loss_averager.reset()
