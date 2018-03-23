@@ -10,6 +10,7 @@ from torch.optim.lr_scheduler import ExponentialLR
 
 from minerva.backend.models.pytorch.utils import overlay_box, overlay_keypoints, Averager, save_model
 from minerva.backend.models.pytorch.validation import score_model_multi_output, predict_on_batch_multi_output
+from minerva.backend.neptune import get_unique_channel_name
 from minerva.utils import get_logger
 
 logger = get_logger()
@@ -277,9 +278,9 @@ class ExponentialLRScheduler(Callback):
         logger.info('initial lr: {0}'.format(self.optimizer.state_dict()['param_groups'][0]['initial_lr']))
 
     def on_epoch_end(self, *args, **kwargs):
-        if self.epoch_every and (((self.epoch_id+1) % self.epoch_every) == 0):
+        if self.epoch_every and (((self.epoch_id + 1) % self.epoch_every) == 0):
             self.lr_scheduler.step()
-            logger.info('epoch {0} current lr: {1}'.format(self.epoch_id+1,
+            logger.info('epoch {0} current lr: {1}'.format(self.epoch_id + 1,
                                                            self.optimizer.state_dict()['param_groups'][0]['lr']))
         self.epoch_id += 1
         self.batch_id = 0
@@ -288,7 +289,7 @@ class ExponentialLRScheduler(Callback):
         if self.batch_every and ((self.batch_id % self.batch_every) == 0):
             self.lr_scheduler.step()
             logger.info('epoch {0} batch {1} current lr: {2}'.format(
-                self.epoch_id+1, self.batch_id+1, self.optimizer.state_dict()['param_groups'][0]['lr']))
+                self.epoch_id + 1, self.batch_id + 1, self.optimizer.state_dict()['param_groups'][0]['lr']))
         self.batch_id += 1
 
 
@@ -331,17 +332,24 @@ class ModelCheckpoint(Callback):
 
 
 class NeptuneMonitor(Callback):
-    def __init__(self):
+    def __init__(self, name=None):
         super().__init__()
         self.ctx = neptune.Context()
+        self.name = name
         self.epoch_loss_averager = Averager()
         self.epoch_acc_averager = Averager()
+
+    def _get_channel_name(self, base_name):
+        if base_name not in self._channel_names:
+            self._channel_names[base_name] = get_unique_channel_name(self.ctx, base_name, suffix=self.name)
+        return self._channel_names[base_name]
 
     def on_train_begin(self, *args, **kwargs):
         self.epoch_loss_averager.reset()
         self.epoch_acc_averager.reset()
         self.epoch_id = 0
         self.batch_id = 0
+        self._channel_names = {}
 
     def on_batch_end(self, metrics, *args, **kwargs):
         batch_loss = metrics['batch_loss']
@@ -353,8 +361,8 @@ class NeptuneMonitor(Callback):
         logs = {'epoch_id': self.epoch_id, 'batch_id': self.batch_id, 'batch_loss': batch_loss,
                 'batch_acc': batch_acc}
 
-        self.ctx.channel_send('batch_loss', x=logs['batch_id'], y=logs['batch_loss'])
-        self.ctx.channel_send('batch_acc', x=logs['batch_id'], y=logs['batch_acc'])
+        self.ctx.channel_send(self._get_channel_name('batch_loss'), x=logs['batch_id'], y=logs['batch_loss'])
+        self.ctx.channel_send(self._get_channel_name('batch_acc'), x=logs['batch_id'], y=logs['batch_acc'])
 
         self.batch_id += 1
 
@@ -376,15 +384,15 @@ class NeptuneMonitor(Callback):
         self.epoch_id += 1
 
     def _send_numeric_channels(self, logs):
-        self.ctx.channel_send('epoch_loss', x=logs['epoch_id'], y=logs['epoch_loss'])
-        self.ctx.channel_send('epoch_acc', x=logs['epoch_id'], y=logs['epoch_acc'])
-        self.ctx.channel_send('epoch_val_loss', x=logs['epoch_id'], y=logs['epoch_val_loss'])
-        self.ctx.channel_send('epoch_val_acc', x=logs['epoch_id'], y=logs['epoch_val_acc'])
+        self.ctx.channel_send(self._get_channel_name('epoch_loss'), x=logs['epoch_id'], y=logs['epoch_loss'])
+        self.ctx.channel_send(self._get_channel_name('epoch_acc'), x=logs['epoch_id'], y=logs['epoch_acc'])
+        self.ctx.channel_send(self._get_channel_name('epoch_val_loss'), x=logs['epoch_id'], y=logs['epoch_val_loss'])
+        self.ctx.channel_send(self._get_channel_name('epoch_val_acc'), x=logs['epoch_id'], y=logs['epoch_val_acc'])
 
 
 class NeptuneMonitorLocalizer(NeptuneMonitor):
-    def __init__(self, bins_nr, img_nr):
-        super().__init__()
+    def __init__(self, bins_nr, img_nr, name=None):
+        super().__init__(name=name)
         self.bins_nr = bins_nr
         self.img_nr = img_nr
 
@@ -408,7 +416,7 @@ class NeptuneMonitorLocalizer(NeptuneMonitor):
                 predict_on_batch_multi_output(self.model, self.validation_datagen)):
             image_with_box = overlay_box(image, y_pred, y_true, self.bins_nr)
             pill_image = Image.fromarray((image_with_box * 255.).astype(np.uint8))
-            self.ctx.channel_send("plotted bbox", neptune.Image(
+            self.ctx.channel_send(self._get_channel_name("plotted bbox"), neptune.Image(
                 name='epoch{}_batch{}_idx{}'.format(self.epoch_id, self.batch_id, i),
                 description="true and prediction bbox",
                 data=pill_image))
@@ -419,8 +427,8 @@ class NeptuneMonitorLocalizer(NeptuneMonitor):
 
 
 class NeptuneMonitorKeypoints(NeptuneMonitor):
-    def __init__(self, bins_nr, img_nr):
-        super().__init__()
+    def __init__(self, bins_nr, img_nr, name=None):
+        super().__init__(name=name)
         self.bins_nr = bins_nr
         self.img_nr = img_nr
 
@@ -444,7 +452,7 @@ class NeptuneMonitorKeypoints(NeptuneMonitor):
                 predict_on_batch_multi_output(self.model, self.validation_datagen)):
             image_with_keypoints = overlay_keypoints(image, y_pred, y_true, self.bins_nr)
             pill_image = Image.fromarray((image_with_keypoints * 255.).astype(np.uint8))
-            self.ctx.channel_send("plotted key points", neptune.Image(
+            self.ctx.channel_send(self._get_channel_name("plotted key points"), neptune.Image(
                 name='epoch{}_batch{}_idx{}'.format(self.epoch_id, self.batch_id, i),
                 description="true and prediction key points",
                 data=pill_image))
@@ -473,7 +481,7 @@ class ExperimentTiming(Callback):
     def on_epoch_begin(self, *args, **kwargs):
         if self.epoch_id > 0:
             epoch_time = datetime.now() - self.epoch_start
-            logger.info('epoch {0} time {1}'.format(self.epoch_id-1, str(epoch_time)[:-7]))
+            logger.info('epoch {0} time {1}'.format(self.epoch_id - 1, str(epoch_time)[:-7]))
         self.epoch_start = datetime.now()
         self.current_sum = timedelta()
         self.current_mean = timedelta()
@@ -484,7 +492,7 @@ class ExperimentTiming(Callback):
             current_delta = datetime.now() - self.batch_start
             self.current_sum += current_delta
             self.current_mean = self.current_sum / self.batch_id
-        if self.batch_id > 0 and (((self.batch_id-1) % 10) == 0):
+        if self.batch_id > 0 and (((self.batch_id - 1) % 10) == 0):
             logger.info('epoch {0} average batch time: {1}'.format(self.epoch_id, str(self.current_mean)[:-5]))
         if self.batch_id == 0 or self.batch_id % 10 == 0:
             logger.info('epoch {0} batch {1} ...'.format(self.epoch_id, self.batch_id))
