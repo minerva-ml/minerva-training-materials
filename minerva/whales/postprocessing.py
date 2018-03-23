@@ -119,7 +119,7 @@ class ProbabilityCalibration(BaseTransformer):
     def __init__(self, power):
         self.power = power
 
-    def fit(self, prediction_proba):
+    def fit(self, prediction_probability):
         return self
 
     def transform(self, prediction_probability):
