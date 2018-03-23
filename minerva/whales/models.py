@@ -93,25 +93,25 @@ class PyTorchLocalizer(nn.Module):
         self.point1_x = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.point1_y = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.point2_x = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.point2_y = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
     def _get_flat_features(self, in_size, features):
@@ -183,37 +183,37 @@ class PyTorchAligner(nn.Module):
         self.point1_x = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['points']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.point1_y = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['points']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.point2_x = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['points']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.point2_y = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['points']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.callosity = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['callosity']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.whale_id = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['whale_id']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
     def _flatten_features(self, in_size, features):
@@ -300,7 +300,7 @@ class PyTorchClassifier(nn.Module):
         self.classifier = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, num_classes),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
     def _flatten_features(self, in_size, features):
@@ -373,13 +373,13 @@ class PyTorchClassifierMultiOutput(nn.Module):
         self.whale_id = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['whale_id']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
         self.callosity = nn.Sequential(
             nn.Dropout(p=0.2),
             nn.Linear(self.flat_features, classes['callosity']),
-            nn.LogSoftmax()
+            nn.LogSoftmax(dim=1)
         )
 
     def _flatten_features(self, in_size, features):
