@@ -42,8 +42,8 @@ class Task3(Task):
         return self
 
     def modify_pipeline(self, user_solution, user_config):
-        self.trainer.pipeline.get_step('loader').transformer.datagen_builder = user_solution
-        self.trainer.pipeline.get_step('loader').is_substituted = True
+        self.trainer.pipeline.get_step('input').transformer.datagen_builder = user_solution
+        self.trainer.pipeline.get_step('input').is_substituted = True
         return self
 
 
@@ -51,5 +51,5 @@ class Task3(Task):
 class Task4(Task):
     def modify_trainer(self, user_solution, user_config):
         self.trainer.cross_validation_split = user_solution
-        self.trainer.pipeline.get_step('loader').is_substituted = True
+        self.trainer.pipeline.get_step('input').is_substituted = True
         return self
