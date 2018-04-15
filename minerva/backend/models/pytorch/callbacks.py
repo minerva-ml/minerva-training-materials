@@ -10,7 +10,7 @@ from torch.optim.lr_scheduler import ExponentialLR
 
 from minerva.backend.models.pytorch.utils import overlay_box, overlay_keypoints, Averager, save_model
 from minerva.backend.models.pytorch.validation import score_model_multi_output, predict_on_batch_multi_output
-from minerva.backend.neptune import get_unique_channel_name
+from minerva.backend.utils import get_unique_channel_name
 from minerva.utils import get_logger
 
 logger = get_logger()
