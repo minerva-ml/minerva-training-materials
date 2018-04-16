@@ -6,4 +6,4 @@ There are couple of things that will make the processing of your issue faster:
 
 Thanks!
 
-Minerva Team
+minerva.ml Team
