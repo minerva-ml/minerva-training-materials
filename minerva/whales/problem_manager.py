@@ -60,7 +60,7 @@ def _evaluate(trainer, sub_problem):
     print('Test score is {0:.4f}'.format(score_test))
 
     if np.abs(score_test - score_valid) > registered_scores[sub_problem]['score_std']:
-        print('Sorry, your validation split is messed up. Fix it please.')
+        print('Sorry, but the difference between your test score and validation score is too high. Maybe your model is overfitting. Hint: Consider adding dropout layers.')
     else:
         print('That is a solid validation')
 
