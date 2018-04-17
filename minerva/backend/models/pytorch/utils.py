@@ -16,14 +16,14 @@ def overlay_box(img, predicted_box, true_box, bin_nr):
 
     x1 = int(1.0 * x1 * img_w / bin_nr)
     y1 = int(1.0 * y1 * img_h / bin_nr)
-    x2 = int(1.0 * x2 * img_h / bin_nr)
+    x2 = int(1.0 * x2 * img_w / bin_nr)
     y2 = int(1.0 * y2 * img_h / bin_nr)
 
     tx1, ty1, tx2, ty2 = true_box
 
     tx1 = int(1.0 * tx1 * img_w / bin_nr)
     ty1 = int(1.0 * ty1 * img_h / bin_nr)
-    tx2 = int(1.0 * tx2 * img_h / bin_nr)
+    tx2 = int(1.0 * tx2 * img_w / bin_nr)
     ty2 = int(1.0 * ty2 * img_h / bin_nr)
 
     img_overlayed = img.copy()
@@ -40,14 +40,14 @@ def overlay_keypoints(img, pred_keypoints, true_keypoints, bin_nr):
 
     x1 = int(1.0 * x1 * img_w / bin_nr)
     y1 = int(1.0 * y1 * img_h / bin_nr)
-    x2 = int(1.0 * x2 * img_h / bin_nr)
+    x2 = int(1.0 * x2 * img_w / bin_nr)
     y2 = int(1.0 * y2 * img_h / bin_nr)
 
     tx1, ty1, tx2, ty2 = true_keypoints[:4]
 
     tx1 = int(1.0 * tx1 * img_w / bin_nr)
     ty1 = int(1.0 * ty1 * img_h / bin_nr)
-    tx2 = int(1.0 * tx2 * img_h / bin_nr)
+    tx2 = int(1.0 * tx2 * img_w / bin_nr)
     ty2 = int(1.0 * ty2 * img_h / bin_nr)
 
     img_overlayed = img.copy()
