@@ -5,7 +5,9 @@ import subprocess
 import sys
 from pathlib import Path
 
+import numpy as np
 from PIL import Image
+from imgaug import augmenters as iaa
 
 
 def setup_torch_multiprocessing():
@@ -178,8 +180,6 @@ def _decode_pil(img_path, *, scale: float = 1):
 
     img = Image.open(img_path)
     if scale < 1:
-        from imgaug import augmenters as iaa
-        import numpy as np
         scale_augmenter = iaa.Scale(scale)
         img = scale_augmenter.augment_image(np.array(img, dtype=np.uint8))
     else:
