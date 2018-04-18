@@ -123,8 +123,11 @@ class DatasetLocalizer(MetaDatasetBasic):
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, self.augmentation, org_size=org_size,
-                                             target_size=self.target_size, bins_nr=self.bins_nr)
+        Xi, yi = self.preprocessing_function(Xi, yi,
+                                             self.augmentation,
+                                             org_size=org_size,
+                                             target_size=self.target_size,
+                                             bins_nr=self.bins_nr)
         Xi = self.normalization_function(Xi)
 
         Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1).type(torch.FloatTensor)
@@ -148,8 +151,12 @@ class DatasetAligner(MetaDatasetBasic):
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, crop_coordinates, self.augmentation, org_size=org_size,
-                                             target_size=self.target_size, bins_nr=self.bins_nr)
+        Xi, yi = self.preprocessing_function(Xi, yi,
+                                             crop_coordinates,
+                                             self.augmentation,
+                                             org_size=org_size,
+                                             target_size=self.target_size,
+                                             bins_nr=self.bins_nr)
         Xi = self.normalization_function(Xi)
 
         Xi_tensor = torch.from_numpy(Xi).permute(2, 0, 1).type(torch.FloatTensor)
@@ -174,7 +181,10 @@ class DatasetClassifier(MetaDatasetBasic):
         Xi_img = self.load_image(img_name)
         Xi = np.asarray(Xi_img)
 
-        Xi, yi = self.preprocessing_function(Xi, yi, aligner_coordinates, self.augmentation, org_size=org_shape,
+        Xi, yi = self.preprocessing_function(Xi, yi,
+                                             aligner_coordinates,
+                                             self.augmentation,
+                                             org_size=org_shape,
                                              target_size=self.target_size)
         Xi = self.normalization_function(Xi)
 
