@@ -9,6 +9,7 @@ numpy==1.14.0
 opencv-python==3.4.0.12
 pandas==0.22.0
 Pillow==5.0.0
+PyTurboJPEG==1.1.2
 pydot_ng==1.0.0
 PyYAML==3.12
 tqdm==4.11.2

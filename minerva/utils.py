@@ -5,6 +5,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+import numpy as np
+from PIL import Image
+from imgaug import augmenters as iaa
+
 
 def setup_torch_multiprocessing():
     import torch.multiprocessing as mp
@@ -160,6 +164,57 @@ def copytree(src, dst, symlinks=False, ignore=None):
             shutil.copytree(s, d, symlinks, ignore)
         else:
             shutil.copy2(s, d)
+
+
+def _decode_turbo(img_path, *, scale: float = 1):
+    import turbojpeg
+    scaling_factor = (1, int(1 / scale))
+    with Path(img_path).open('rb') as img_file:
+        return _TURBO_DECODER.decode(img_file.read(), scaling_factor=scaling_factor,
+                                     pixel_format=turbojpeg.TJPF_RGB)
+
+
+def _decode_pil(img_path, *, scale: float = 1):
+    if scale > 1 or scale <= 0.:
+        raise ValueError('Scale shall be in range (0, 1]')
+
+    img = Image.open(img_path)
+    if scale < 1:
+        scale_augmenter = iaa.Scale(scale)
+        img = scale_augmenter.augment_image(np.array(img, dtype=np.uint8))
+    else:
+        # need to load it here before image closing (no lazy loading)
+        img = img.load()
+    return img
+
+
+try:
+    """
+    install libturbojpeg. on Ubuntu 16.04 use:
+    sudo apt install libturbojpeg
+    """
+    from turbojpeg import TurboJPEG
+
+    _TURBO_DECODER = TurboJPEG(lib_path='/usr/lib/x86_64-linux-gnu/libturbojpeg.so.0')
+    decode_jpeg = _decode_turbo
+except OSError:
+    decode_jpeg = _decode_pil
+except ImportError:
+    decode_jpeg = _decode_pil
+
+
+def decode_with_rescale(img_path, minimum_shape, *, max_scaling_factor=4):
+    img = Image.open(img_path)
+
+    scale_factor = 0.5
+    found = False
+    while not found and scale_factor < max_scaling_factor:
+        scale_factor = int(scale_factor * 2)
+        for img_dim, target_dim in zip(img.size, minimum_shape):
+            found |= img_dim / scale_factor <= target_dim
+
+    scale = 1 / scale_factor
+    return decode_jpeg(img_path, scale=scale)
 
 
 SUBPROBLEM_INFERENCE = {'whales': {1: 'localization',
