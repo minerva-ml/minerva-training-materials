@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 from importlib import import_module
+import tempfile
 
 
 class Task():
@@ -24,15 +25,21 @@ class Task():
         pass
 
 
-class TaskSolutionParser(object):
+class TaskSolutionParser(tempfile.TemporaryDirectory):
     """Todo:
     exit doesn't work on exceptions and leaves converted .py file out there
     """
 
     def __init__(self, filepath):
+        super().__init__()
         self.filepath = os.path.abspath(filepath)
 
     def __enter__(self):
+        tempdir = super().__enter__()
+        cmd = 'mv {} {}'.format(self.filepath, tempdir)
+        subprocess.call(cmd, shell=True)
+        self.filepath = os.path.join(tempdir, os.path.basename(self.filepath))
+
         if self.filepath.endswith('.ipynb'):
             cmd = 'jupyter nbconvert --to python {}'.format(self.filepath)
             subprocess.call(cmd, shell=True)
@@ -49,7 +56,4 @@ class TaskSolutionParser(object):
         return task_solution
 
     def __exit__(self, exc_type, exc_value, traceback):
-        if self.filepath.endswith('.ipynb'):
-            filepath = self.filepath.replace('.ipynb', '.py')
-            cmd = 'rm {}'.format(filepath)
-            subprocess.call(cmd, shell=True)
+        super().__exit__()
