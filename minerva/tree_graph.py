@@ -5,31 +5,19 @@ import plotly.graph_objs as go
 class InteractiveGraph:
     """Interactive tree graph.
 
-    Parameters
-    ----------
-    filename : str
-        Name of the .gml file.
+    Args:
+        filename: Name of the .gml file.
 
-    Attributes
-    ----------
-    G : igraph.Graph
-        Graph loaded from gml file.
-    edges : list of tuples
-        Edges in the graph.
-    ids : list of Integers
-        Indexes of nodes in graph.
-    labels : list of Strings
-        Labels of nodes from gml file.
-    num_nodes: int
-        Number of nodes.
-    tree_height: int
-        Height of the graph.
-    positions : dict
-        Positions of nodes in graph.
-    lines : plotly.graph_objs.Scatter
-        Representation of edges.
-    dots : plotly.graph_objs.Scatter
-        Representation of nodes.
+    Attributes:
+        G: Graph loaded from gml file.
+        edges: Edges in the graph.
+        ids: Indexes of nodes in graph.
+        labels: Labels of nodes from gml file.
+        num_nodes: Number of nodes.
+        tree_height: Height of the graph.
+        positions: Positions of nodes in graph.
+        lines: Representation of edges.
+        dots: Representation of nodes.
     """
 
     def __init__(self, filename):
@@ -46,7 +34,6 @@ class InteractiveGraph:
         self.dots = self._make_dots()
 
     def _make_positions(self):
-        """Choose positions for the nodes."""
 
         kids = [edge[1] for edge in self.edges if edge[0] == 0]
 
@@ -65,7 +52,6 @@ class InteractiveGraph:
         return positions
 
     def _nodes_coords(self):
-        """Find coordinates of the nodes """
 
         Xn = [self.positions[k][0] for k in range(self.num_nodes)]
         Yn = [2 * self.tree_height - self.positions[k][1] for k in range(self.num_nodes)]
@@ -73,7 +59,6 @@ class InteractiveGraph:
         return Xn, Yn
 
     def _edges_coords(self):
-        """Find coordinates of the edges """
 
         Xe = []
         Ye = []
@@ -115,7 +100,17 @@ class InteractiveGraph:
                            )
         return lines
 
-    def make_annotations(self, labels='', font_size=10, font_color='rgb(250,250,250)'):
+    def make_annotations(self, labels=[], font_size=10, font_color='rgb(250,250,250)'):
+        """Interactive tree graph.
+
+        Args:
+            labels: New labels.
+            font_size: Size of the font.
+            font_color: Color of the font.
+
+        Returns:
+            annotations: Graph annotation.
+        """
 
         if not labels:
             labels = self.labels
@@ -138,7 +133,14 @@ class InteractiveGraph:
 
 
 def prepare_graph(filename):
-    """Prepare a graph to plot."""
+    """Prepare a graph to plot.
+
+    Args:
+        filename: Name of the .gml file.
+
+    Returns:
+        fig : The figure prepare for plotly.iplot function.
+    """
 
     G = InteractiveGraph(filename)
 
