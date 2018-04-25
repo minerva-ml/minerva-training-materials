@@ -11,6 +11,7 @@ from minerva.backend.models.pytorch.utils import overlay_box, overlay_keypoints,
 from minerva.backend.models.pytorch.validation import score_model_multi_output, predict_on_batch_multi_output
 from minerva.backend.utils import get_unique_channel_name
 from minerva.utils import get_logger
+from deepsense import neptune
 
 logger = get_logger()
 
@@ -333,7 +334,6 @@ class ModelCheckpoint(Callback):
 class NeptuneMonitor(Callback):
     def __init__(self, name=None):
         super().__init__()
-        from deepsense import neptune
         self.ctx = neptune.Context()
         self.name = name
         self.epoch_loss_averager = Averager()

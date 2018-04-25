@@ -26,9 +26,6 @@ class Task():
 
 
 class TaskSolutionParser(tempfile.TemporaryDirectory):
-    """Todo:
-    exit doesn't work on exceptions and leaves converted .py file out there
-    """
 
     def __init__(self, filepath):
         super().__init__()
@@ -53,4 +50,5 @@ class TaskSolutionParser(tempfile.TemporaryDirectory):
             raise ValueError('Failed to convert your solution to pipeline element. Likely problem is indentation format')
         sys.path.append(module_dir)
         task_solution = vars(import_module(module_name))
+
         return task_solution
