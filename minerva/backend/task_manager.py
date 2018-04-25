@@ -36,7 +36,7 @@ class TaskSolutionParser(tempfile.TemporaryDirectory):
 
     def __enter__(self):
         tempdir = super().__enter__()
-        cmd = 'mv {} {}'.format(self.filepath, tempdir)
+        cmd = 'cp {} {}'.format(self.filepath, tempdir)
         subprocess.call(cmd, shell=True)
         self.filepath = os.path.join(tempdir, os.path.basename(self.filepath))
 
@@ -54,6 +54,3 @@ class TaskSolutionParser(tempfile.TemporaryDirectory):
         sys.path.append(module_dir)
         task_solution = vars(import_module(module_name))
         return task_solution
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        super().__exit__()
