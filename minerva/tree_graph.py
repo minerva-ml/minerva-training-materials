@@ -21,7 +21,6 @@ class InteractiveGraph:
     """
 
     def __init__(self, filename):
-
         self.G = igraph.Graph.Read_GML(filename)
         self.edges = [e.tuple for e in self.G.es]
         self.ids = self.G.vs['id']
@@ -36,7 +35,6 @@ class InteractiveGraph:
     def _make_positions(self):
         kids = [edge[1] for edge in self.edges if edge[0] == 0]
         positions = {0: [0, 0]}
-
         while kids:
             width_range = (len(kids) - 1.) / 2
             for i, kid in enumerate(kids):
