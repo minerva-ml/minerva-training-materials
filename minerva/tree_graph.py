@@ -34,45 +34,34 @@ class InteractiveGraph:
         self.dots = self._make_dots()
 
     def _make_positions(self):
-
         kids = [edge[1] for edge in self.edges if edge[0] == 0]
-
         positions = {0: [0, 0]}
 
         while kids:
-
             width_range = (len(kids) - 1.) / 2
             for i, kid in enumerate(kids):
                 positions[kid] = [-width_range + i, self.tree_height]
-
             parents = kids
             kids = [edge[1] for parent in parents for edge in self.edges if edge[0] == parent]
             self.tree_height += 1
-
         return positions
 
     def _nodes_coords(self):
-
         Xn = [self.positions[k][0] for k in range(self.num_nodes)]
         Yn = [2 * self.tree_height - self.positions[k][1] for k in range(self.num_nodes)]
-
         return Xn, Yn
 
     def _edges_coords(self):
-
         Xe = []
         Ye = []
         for edge in self.edges:
             Xe += [self.positions[edge[0]][0], self.positions[edge[1]][0], None]
             Ye += [2 * self.tree_height - self.positions[edge[0]][1],
                    2 * self.tree_height - self.positions[edge[1]][1], None]
-
         return Xe, Ye
 
     def _make_dots(self):
-
         Xn, Yn = self._nodes_coords()
-
         dots = go.Scatter(x=Xn,
                           y=Yn,
                           mode='markers',
@@ -89,9 +78,7 @@ class InteractiveGraph:
         return dots
 
     def _make_lines(self):
-
         Xe, Ye = self._edges_coords()
-
         lines = go.Scatter(x=Xe,
                            y=Ye,
                            mode='lines',
@@ -114,7 +101,6 @@ class InteractiveGraph:
 
         if not labels:
             labels = self.labels
-
         elif len(labels) != self.num_nodes:
             raise ValueError('The lists positions and labels must have the same len')
 
@@ -143,13 +129,11 @@ def prepare_graph(filename):
     """
 
     G = InteractiveGraph(filename)
-
     axis = dict(showline=False,
                 zeroline=False,
                 showgrid=False,
                 showticklabels=False,
                 )
-
     layout = dict(annotations=G.make_annotations(),
                   font=dict(size=15),
                   showlegend=False,
@@ -159,9 +143,7 @@ def prepare_graph(filename):
                   hovermode='closest',
                   plot_bgcolor='rgb(248,248,248)'
                   )
-
     data = go.Data([G.lines, G.dots])
     fig = dict(data=data, layout=layout)
     fig['layout'].update(annotations=G.make_annotations(G.ids, 15))
-
     return fig
