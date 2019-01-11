@@ -24,26 +24,21 @@ def dry_run(sub_problem, train_mode, dev_mode):
 
 
 def submit_task(sub_problem, task_nr, filepath, dev_mode):
-    config, _ = setup_env(SOLUTION_CONFIG, sub_problem)
-
-    check_inputs(train_mode=False, config=config, pipeline=solution_pipeline)
-    submit_config = submit_setup(config)
-    trainer = Trainer(solution_pipeline, submit_config, dev_mode)
-    user_task_solution, user_config = _fetch_task_solution(filepath)
-    task_handler = registered_tasks[task_nr](trainer)
-    new_trainer = task_handler.substitute(user_task_solution, user_config)
-
-    new_trainer.train()
-    _evaluate(new_trainer)
-    K.clear_session()
-    submit_teardown(submit_config)
-
-
-def _fetch_task_solution(filepath):
     with TaskSolutionParser(filepath) as task_solution:
-        user_solution = task_solution.get('solution')
+        config, _ = setup_env(SOLUTION_CONFIG, sub_problem)
+
+        check_inputs(train_mode=False, config=config, pipeline=solution_pipeline)
+        submit_config = submit_setup(config)
+        trainer = Trainer(solution_pipeline, submit_config, dev_mode)
+        user_task_solution = task_solution.get('solution')
         user_config = task_solution.get('CONFIG')
-    return user_solution, user_config
+        task_handler = registered_tasks[task_nr](trainer)
+        new_trainer = task_handler.substitute(user_task_solution, user_config)
+
+        new_trainer.train()
+        _evaluate(new_trainer)
+        K.clear_session()
+        submit_teardown(submit_config)
 
 
 def _evaluate(trainer):

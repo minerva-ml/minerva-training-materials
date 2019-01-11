@@ -142,7 +142,7 @@ class Task8(Task):
     """
 
     def modify_pipeline(self, user_solution, user_config):
-        self.trainer.pipeline.get_step('aligner_loader').transformer = user_solution()
+        self.trainer.pipeline.get_step('aligner_loader').transformer.dataset = user_solution()
         self.trainer.pipeline.get_step('aligner_loader').is_substituted = True
         return self
 
@@ -155,6 +155,6 @@ class Task9(Task):
     """
 
     def modify_pipeline(self, user_solution, user_config):
-        self.trainer.pipeline.get_step('classifier_loader').transformer = user_solution()
+        self.trainer.pipeline.get_step('classifier_loader').transformer.dataset = user_solution()
         self.trainer.pipeline.get_step('classifier_loader').is_substituted = True
         return self

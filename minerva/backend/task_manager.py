@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 from importlib import import_module
+import tempfile
 
 
 class Task():
@@ -24,15 +25,18 @@ class Task():
         pass
 
 
-class TaskSolutionParser(object):
-    """Todo:
-    exit doesn't work on exceptions and leaves converted .py file out there
-    """
+class TaskSolutionParser(tempfile.TemporaryDirectory):
 
     def __init__(self, filepath):
+        super().__init__()
         self.filepath = os.path.abspath(filepath)
 
     def __enter__(self):
+        tempdir = super().__enter__()
+        cmd = 'cp {} {}'.format(self.filepath, tempdir)
+        subprocess.call(cmd, shell=True)
+        self.filepath = os.path.join(tempdir, os.path.basename(self.filepath))
+
         if self.filepath.endswith('.ipynb'):
             cmd = 'jupyter nbconvert --to python {}'.format(self.filepath)
             subprocess.call(cmd, shell=True)
@@ -46,10 +50,5 @@ class TaskSolutionParser(object):
             raise ValueError('Failed to convert your solution to pipeline element. Likely problem is indentation format')
         sys.path.append(module_dir)
         task_solution = vars(import_module(module_name))
-        return task_solution
 
-    def __exit__(self, exc_type, exc_value, traceback):
-        if self.filepath.endswith('.ipynb'):
-            filepath = self.filepath.replace('.ipynb', '.py')
-            cmd = 'rm {}'.format(filepath)
-            subprocess.call(cmd, shell=True)
+        return task_solution
