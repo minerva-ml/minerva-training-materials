@@ -5,7 +5,7 @@ ipython==7.16.3
 jupyter==1.0.0
 matplotlib==2.1.1
 neptune-cli
-numpy==1.14.0
+numpy==1.21.0
 opencv-python==4.2.0.32
 pandas==0.22.0
 Pillow>=6.2.2
